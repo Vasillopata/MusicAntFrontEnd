@@ -1,0 +1,12 @@
+:root{
+    --darkest:#1e2124;
+    --black1:#36393e;
+    --black1-hover: #2e3034;
+    --black2: #54575b;
+    --black2-half:#54575b9e;
+    --blue: #7289da;
+    --gray: #99aab5;
+}
+*{
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
