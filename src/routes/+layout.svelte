@@ -1,5 +1,6 @@
 <script lang="ts">
-    import "./style.css";
+    import RightNav from "./RightNav.svelte";
+import "./style.css";
     import {slide} from 'svelte/transition'
     let searchBarInput = ''
     let searchBarElement: HTMLInputElement|undefined = undefined
@@ -12,15 +13,27 @@
         switch(name){
             case 'fans':
                 fansOpened = !fansOpened
+                genreOpened = false
+                resourcesOpened = false
+                savedOpened = false
                 break
             case 'genre':                
                 genreOpened = !genreOpened
+                fansOpened = false
+                resourcesOpened = false
+                savedOpened = false
                 break
             case 'resources':
                 resourcesOpened = !resourcesOpened
+                savedOpened = false
+                genreOpened = false
+                fansOpened = false
                 break
             case 'saved':
                 savedOpened = !savedOpened
+                genreOpened = false
+                fansOpened = false
+                resourcesOpened = false
                 break
         }
     }
@@ -31,22 +44,22 @@
 <div class="app">
     <div class="top-nav">
         <div class="logo">
-            <button class="logo-button">
+            <a style="text-decoration: none;" href="/" class="logo-button">
                 <img src="/images/ant.svg" alt="">
                 MUSIC<span style="color:var(--blue)">A</span>NT
-            </button>
+            </a>
         </div>
-        <div style="position: relative;">
+        <div style="position: relative; margin: 0 auto;">
             <i class='bx bx-search' style="position: absolute; top:50%;left:1.5rem; font-size:2rem; transform:translateY(-50%); opacity:1 !important;z-index:1"></i>
             <input placeholder="Търси..." class="search-bar" type="text" name="" bind:value={searchBarInput} bind:this={searchBarElement}> 
             {#if searchBarInput != ''}
-                <button on:click={()=>{searchBarInput = "";searchBarElement?.focus()}} transition:slide class="search-bar-clear"><i class='bx bx-message-square-x' ></i></button>
-
+                <button on:click={()=>{searchBarInput = "";searchBarElement?.focus()}} transition:slide={{duration:400}} class="search-bar-clear"><i class='bx bx-message-square-x' ></i></button>
             {/if}
         </div>
-        <button class="login-button">Log In</button>
+        <a class="post-button" href="/posting">Качи</a>
+        <a style="text-decoration: none" href="/login"><button class="login-button">Вход</button></a>
     </div>
-    <div style="display: flex; flex-direction: row; height:90%;">
+    <div style="display: flex; flex-direction: row; box-sizing:border-box; margin-top:6rem; min-height:100%">
         <div class="side-nav">
             <a href="/" on:click={(e)=>{toggleCategory(e,'fans')}} class="side-button" class:side-button-opened={fansOpened}>
                 <span>Фенове</span>
@@ -54,24 +67,23 @@
             </a>
             {#if fansOpened}
                 <div transition:slide class="dropdown">
-                    
-                    <a href="">
+                    <a href="/">
                         <div class="top-profile"><img src="/images/moni.jpg" alt=""></div>
                         <span>xX.woman_Under5tander.Xx</span>
                     </a>
-                    <a href="">
+                    <a href="/">
                         <div class="top-profile"><img src="/images/papi.png" alt=""></div>
                         <span>Iskender Nursultan Aziz Öztürk</span>
                     </a>    
-                    <a href="">
+                    <a href="/account">
                         <div class="top-profile"><img src="/images/ale.jpg" alt=""></div>
                         <span>Dr Porn</span>
                     </a>                  
-                    <a href="">
+                    <a href="/">
                         <div class="top-profile"><img src="/images/advokad.png" alt=""></div>
                         <span>Advokaát</span>
                     </a>     
-                    <a href="">
+                    <a href="/">
                         <div class="top-profile"><img src="/images/ben.png" alt=""></div>
                         <span>Ben Shapiro</span>
                     </a>               
@@ -82,8 +94,31 @@
                 <i class='bx bx-chevron-down'></i>
             </a>
             {#if genreOpened}
-                <div transition:slide class="dropdown">
-                
+                <div transition:slide class="genre-dropdown">
+                    <a href="/">
+                        <span>Рок</span>
+                    </a>
+                    <a href="/">
+                        <span>Блус</span>
+                    </a>
+                    <a href="/">
+                        <span>Метъл</span>
+                    </a>    
+                    <a href="/">
+                        <span>Класическа</span>
+                    </a>              
+                    <a href="/">
+                        <span>Фолк</span>
+                    </a>     
+                    <a href="/">
+                        <span>Джас</span>
+                    </a>     
+                    <a href="/">
+                        <span>Поп</span>
+                    </a> 
+                    <a href="/">
+                        <span>Електронна</span>
+                    </a> 
                 </div>
             {/if}
             <a href="/" on:click={(e)=>{toggleCategory(e,'resources')}} class="side-button" class:side-button-opened={resourcesOpened}>
@@ -107,16 +142,36 @@
         </div>
         <main>
             <slot/>
+            <RightNav/>
         </main>
     </div>
 </div>
 
 <style>
+    .post-button{
+        display: flex;
+        flex-direction: row;
+        height: 3.5rem;
+        width: 6.5rem;
+        border-radius: 1.5rem;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--black1);
+        border: none;
+        font-size: 1.5rem;
+        color: whitesmoke;
+        margin-right: 1.5rem;
+        text-decoration:none ;
+    }
+        .post-button:hover{
+            background-color: var(--black1-hover);
+        }
     .top-profile{
         display: flex;
         flex-direction: row;
-        height: 3rem;
-        width: 3rem;
+        height: 3rem !important;
+        width: 3rem !important;
+        min-width: 3rem;
         overflow: hidden;
         z-index: 1;
         border-radius: 100%;
@@ -124,6 +179,37 @@
         margin-right: 0.5rem;
         margin-bottom: 0.5rem;
     }
+    .genre-dropdown{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        width: 16rem;
+        margin: 0 0.5rem 1rem 0.5rem;
+        padding: 0 1rem 0 0.5rem;
+        border-left: 1px solid var(--black1-hover);
+    }
+        .genre-dropdown>a{
+            align-items: center;
+            display: flex;
+            flex-direction: row;
+            color: whitesmoke;
+            text-decoration: none;
+            width: 100%;
+            border-bottom: 1px solid var(--black1);
+            margin-bottom: 0.5rem;
+            z-index: 3;
+            position: relative;
+            font-size: 1.2rem;
+        }   
+            .genre-dropdown>a>span{
+                width: 10rem;
+                margin-bottom: 0.5rem;
+                text-wrap: wrap;
+                word-break: break-all;
+            }
+            .genre-dropdown>a>:hover{
+                color: var(--blue);
+            }
         .top-profile>img{
             border-radius: inherit;
             object-fit: cover;
@@ -140,9 +226,8 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
-        width: 16rem;
-        margin: 0 0.5rem 1rem 0.5rem;
-        padding: 0 1rem 0 0.5rem;
+        width: 100%;
+        padding: 0 1rem 0 0.75rem;
         border-left: 1px solid var(--black1-hover);
     }
         .dropdown>a{
@@ -158,19 +243,19 @@
             position: relative;
         }   
             .dropdown>a>span{
-                width: 10rem;
                 margin-bottom: 0.5rem;
-                text-wrap: wrap;
-                word-break: break-all;
+                overflow: hidden;
+                text-overflow:ellipsis;
+                min-width: 0;
             }
     .login-button{
         border: none;
         background-color: var(--blue);
         color: whitesmoke;
         font-size: 1.5rem;
-        border-radius: 999px;
-        height:3.5rem ;
-        width: 7.5rem;
+        border-radius: 1.5rem;
+        height:3.4rem ;
+        width: 6.5rem;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -197,18 +282,20 @@
     .app {
         display: flex;
         flex-direction: column;
-        height: 100vh;
-        width: 100vw;
+        min-height: 100vh;
+        box-sizing: border-box;
+        overflow: hidden !important;
     }
     main {
+        position: relative;
         display: flex;
         height:100%;
         width:100%;
-        overflow-y: scroll;
-        flex-direction: column;
+        overflow-y: scroll !important;
+        flex-direction: row;
         background-color: var(--black1);
         color: whitesmoke;
-        align-items: center;
+        padding:0 1rem;
     }
     .search-bar{
         background-color: var(--black1);
@@ -228,32 +315,6 @@
         .search-bar:hover, .search-bar:focus{
             opacity: 1;
             outline: none;
-        }
-    .side-button-opened{
-        background-color: var(--black1);
-    }
-        .side-button-opened>i{
-            transform: rotate(180deg);
-        }
-    .side-button{
-        display: flex;
-        background-color: var(--black1);
-        width: 16rem;
-        height: 3rem;
-        margin: 0 0.5rem 1rem 0.5rem;
-        border-radius: 2rem;
-        justify-content: space-between;
-        padding: 0 1rem;
-        align-items: center;
-    }   
-        .side-button>i{
-            font-size: 1.5rem;
-            transition: transform 0.2s ease-in-out;
-        }
-        .side-button:hover{
-            background-color: var(--black1-hover);
-            cursor: pointer;
-            color: whitesmoke   !important;
         }
     .logo{
         display: flex;
@@ -289,28 +350,61 @@
             color: rgb(245, 245, 245) !important;
         }
     .top-nav{
+        position: fixed;
         display: flex;
         flex-direction: row;
-        height: 10%;
+        height: 6rem !important;
         color: whitesmoke;
         background-color:var(--darkest);
         box-shadow: 0px  4px 5px rgba(0, 0, 0, 0.3);
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: center;
         padding: 0 1rem;
+        width: 100%;
+        z-index: 5;
     }
     .side-nav{
         display: flex;
         flex-direction: column;
         width: 20rem;
-        height:100%;
         color: whitesmoke;
-        background-color:var(--darkest);
+        background-color:var(--black1);
         box-shadow: 5px 4px 5px rgba(0, 0, 0, 0.3);
+        padding: 1rem 0.5rem;
+        overflow: hidden;
     }
-    .side-nav > a{
-        text-decoration: none;
-        color: whitesmoke;
-        font-size: larger;
+        .side-nav > a{
+            text-decoration: none;
+            color: whitesmoke;
+            font-size: larger;
+        }
+        .side-button-opened{
+            background-color: var(--black1);
+        }
+            .side-button-opened>i{
+                transform: rotate(180deg);
+            }
+        .side-button{
+            display: flex;
+            background-color: var(--darkest);
+            width:100%;
+            height: 3rem;
+            margin: 0 0 1rem 0;
+            border-radius: 2rem;
+            justify-content: space-between;
+            padding: 0 1rem;
+            align-items: center;
+        }   
+            .side-button>i{
+                font-size: 1.5rem;
+                transition: transform 0.2s ease-in-out;
+            }
+            .side-button:hover{
+                background-color: var(--black1-hover);
+                cursor: pointer;
+                color: whitesmoke   !important;
+            }
+    * {
+        box-sizing: border-box;
     }
 </style>
