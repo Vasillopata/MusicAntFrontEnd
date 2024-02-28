@@ -2,7 +2,7 @@
     import { backInOut, circInOut, cubicInOut, linear, sineInOut } from "svelte/easing";
     import { fade, fly, slide } from "svelte/transition";
 
-    let selectedPostType = ''
+    let selectedPostType = 'img'
     let imageUrl = ''
     let textInput = ''
     let titleInput = ''

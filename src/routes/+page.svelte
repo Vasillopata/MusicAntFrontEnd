@@ -5,7 +5,7 @@
     console.log($page.url.pathname)
 </script>
 
-<div class= "mainPage">
+<div class= "feed">
     <PostImgTxt imgURL={'https://cdn.britannica.com/51/94351-050-86B70FE1/Leaning-Tower-of-Pisa-Italy.jpg'}/>
     <Post imgURL={'/images/monstro.jpg'}/>
     <Post imgURL={'/images/niggawebp.webp'}/>
@@ -17,13 +17,12 @@
 </div>
 
 <style>
-    .mainPage{  
+    .feed{  
         display: flex;
-        margin-top: 0%;
-        width: 100%;
         flex-direction: column;
-        align-items: center;
-        margin-left: -5rem;
+        align-items: flex-start;
+        width:50rem;
+        margin-left: calc(50% - 37rem);
     }
 </style>
 

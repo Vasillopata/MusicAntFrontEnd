@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
     import { page } from "$app/stores";
 </script>
 
@@ -21,4 +21,4 @@
         right: 10rem;
         top: 18rem;
     }
-</style>
+</style> -->
