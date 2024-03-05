@@ -1,10 +1,21 @@
 <script lang="ts">
-	import LeftNav from './LeftNav.svelte';
+    import { onMount } from 'svelte';
+    import LeftNav from './LeftNav.svelte';
     import RightNav from "./RightNav.svelte";
     import "./style.css";
-    import {slide} from 'svelte/transition'
+    import {slide} from 'svelte/transition';
+    import { writable } from 'svelte/store';
     let searchBarInput = ''
     let searchBarElement: HTMLInputElement|undefined = undefined
+
+    let website: HTMLDivElement;
+    import { scrollY } from '$lib/store'
+
+    onMount(() => {
+        website.addEventListener('scroll', () => {
+            scrollY.set(website.scrollTop);
+        });
+    });
 </script>
 
 
@@ -27,14 +38,39 @@
         <a class="post-button" href="/posting">Качи</a>
         <a style="text-decoration: none" href="/login"><button class="login-button">Вход</button></a>
     </div>
-    <LeftNav/>
-    <main>
-        <slot/>
-    </main>
-    <RightNav/>
+    <div class="website-wrap-wrap">
+        <LeftNav/>
+        <div class="website-wrap" bind:this={website}>
+            <main>
+                <slot/>
+            </main>
+            <RightNav/>
+        </div>
+    </div>
 </div>
 
 <style>
+    .website-wrap-wrap {
+        display:flex;
+        overflow: auto;
+        width: 100%;
+    }
+    .website-wrap {
+        display: flex;
+        flex-direction: row;
+        width:100%;
+        flex-grow: 1;
+        overflow:auto;
+        align-items: normal;
+        position: relative;
+    }
+        main {
+            display: flex;
+            flex-direction: column;
+            width:100%;
+            background-color: var(--black1);
+            color: whitesmoke;
+        }
     .post-button{
         display: flex;
         flex-direction: row;
@@ -92,19 +128,9 @@
         height: 100vh !important;
         min-width: 100vw !important;
         box-sizing: border-box;
-        position: relative;
         background-color: var(--black1);
     }
-        main {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            overflow-y: scroll !important;
-            background-color: var(--black1);
-            color: whitesmoke;
-            margin-top: 6rem;
-            margin-left:15%;
-        }
+
     .search-bar{
         background-color: var(--black1);
         border: none;
@@ -158,7 +184,6 @@
             color: rgb(245, 245, 245) !important;
         }
     .top-nav{
-        position: fixed;
         display: flex;
         flex-direction: row;
         height: 6rem !important;

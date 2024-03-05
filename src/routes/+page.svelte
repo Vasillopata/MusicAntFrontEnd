@@ -22,7 +22,8 @@
         flex-direction: column;
         align-items: flex-start;
         width:50rem;
-        margin-left: calc(50% - 37rem);
+        margin-left: calc(50% - 33rem);
+        margin-top: 2rem;
     }
 </style>
 

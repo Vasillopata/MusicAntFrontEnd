@@ -8,11 +8,11 @@
 </script>
 <div class="account-page">
     <div class="account-background">
-        <img src="https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvdjU0NmJhdGNoMy1teW50LTM0LWJhZGdld2F0ZXJjb2xvcl8xLmpwZw.jpg" alt="">    
+        <img src="https://thumbs.dreamstime.com/b/panoramic-autumn-landscape-wooden-path-fall-nature-backgro-sunset-background-97979511.jpg" alt="">    
     </div>
     <div class="account-img">
             <img src="/images/ale.jpg" alt="">
-            <p>Dr Porn</p>
+            <p>Dr Ale</p>
         <div class="account-buttons">
             <button>
                 Съобщение
@@ -38,7 +38,7 @@
 
 <style>
     .post-list{
-        margin-left: 15rem;
+        margin-left: 17rem;
     }
     .account-page{
         display: flex;
@@ -46,33 +46,29 @@
         align-items: start;
     }
     .account-background{
-        overflow: hidden;
         display: flex;
         flex-direction: row;
         width: 95rem;
         height: 12rem;
-        margin-top: 1rem;
-        margin-left: auto   ;
-        border-radius: 1.5rem;
-        
+        margin-left: 2rem;
     }
         .account-background>img{
             object-fit: cover;
             width: 100%;
             height: 100%;
+            border-radius: 1.5rem;
         }
     .account-img{
         display: flex;
         flex-direction: row;
         width: 95rem;
-        justify-content: space-between;
     }
         .account-img>img{
             object-fit: cover;
             height: 12rem;
             width: 12rem;
             margin-top: -6rem;
-            margin-left: 4rem;
+            margin-left: 5rem;
             border-radius: 100%;
             outline: 0.4rem solid var(--black1);
         }
@@ -88,6 +84,7 @@
             background-color: var(--black1);
             margin-left: auto;
             height: 3rem;
+            margin-right: -1rem;
             width: 21rem;
         }
         .account-img>.account-buttons>button{

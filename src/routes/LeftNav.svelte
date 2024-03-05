@@ -37,86 +37,86 @@
 </script>
 
 
-<div class="side-nav">
-    <a href="/" on:click={(e)=>{toggleCategory(e,'fans')}} class="side-button" class:side-button-opened={fansOpened}>
-        <span>Фенове</span>
-        <i class='bx bx-chevron-down'></i>
-    </a>
-    {#if fansOpened}
-        <div transition:slide class="dropdown">
-            <a href="/">
-                <div class="top-profile"><img src="/images/moni.jpg" alt=""></div>
-                <span>xX.woman_Under5tander.Xx</span>
-            </a>
-            <a href="/">
-                <div class="top-profile"><img src="/images/papi.png" alt=""></div>
-                <span>Iskender Nursultan Aziz Öztürk</span>
-            </a>    
-            <a href="/account">
-                <div class="top-profile"><img src="/images/ale.jpg" alt=""></div>
-                <span>Dr Porn</span>
-            </a>                  
-            <a href="/">
-                <div class="top-profile"><img src="/images/advokad.png" alt=""></div>
-                <span>Advokaát</span>
-            </a>     
-            <a href="/">
-                <div class="top-profile"><img src="/images/ben.png" alt=""></div>
-                <span>Ben Shapiro</span>
-            </a>               
-        </div>
-    {/if}
-    <a href="/" on:click={(e)=>{toggleCategory(e,'genre')}} class="side-button" class:side-button-opened={genreOpened}>
-        <span>Жанрове</span>
-        <i class='bx bx-chevron-down'></i>
-    </a>
-    {#if genreOpened}
-        <div transition:slide class="genre-dropdown">
-            <a href="/">
-                <span>Рок</span>
-            </a>
-            <a href="/">
-                <span>Блус</span>
-            </a>
-            <a href="/">
-                <span>Метъл</span>
-            </a>    
-            <a href="/">
-                <span>Класическа</span>
-            </a>              
-            <a href="/">
-                <span>Фолк</span>
-            </a>     
-            <a href="/">
-                <span>Джас</span>
-            </a>     
-            <a href="/">
-                <span>Поп</span>
-            </a> 
-            <a href="/">
-                <span>Електронна</span>
-            </a> 
-        </div>
-    {/if}
-    <a href="/" on:click={(e)=>{toggleCategory(e,'resources')}} class="side-button" class:side-button-opened={resourcesOpened}>
-        <span>Ресурси</span>
-        <i class='bx bx-chevron-down'></i>
-    </a>
-    {#if resourcesOpened}
-        <div transition:slide class="dropdown">
-            
-        </div>
-    {/if}
-    <a href="/" on:click={(e)=>{toggleCategory(e,'saved')}} class="side-button" class:side-button-opened={savedOpened}>
-        <span>Запазени</span>
-        <i class='bx bx-chevron-down'></i>
-    </a>
-    {#if savedOpened}
-        <div transition:slide class="dropdown">
-            
-        </div>
-    {/if}
-</div>
+    <div class="side-nav">
+        <a href="/" on:click={(e)=>{toggleCategory(e,'fans')}} class="side-button" class:side-button-opened={fansOpened}>
+            <span>Фенове</span>
+            <i class='bx bx-chevron-down'></i>
+        </a>
+        {#if fansOpened}
+            <div transition:slide class="dropdown">
+                <a href="/">
+                    <div class="top-profile"><img src="/images/moni.jpg" alt=""></div>
+                    <span>xX.woman_Under5tander.Xx</span>
+                </a>
+                <a href="/">
+                    <div class="top-profile"><img src="/images/papi.png" alt=""></div>
+                    <span>Iskender Nursultan Aziz Öztürk</span>
+                </a>    
+                <a href="/account">
+                    <div class="top-profile"><img src="/images/ale.jpg" alt=""></div>
+                    <span>Dr Porn</span>
+                </a>                  
+                <a href="/">
+                    <div class="top-profile"><img src="/images/advokad.png" alt=""></div>
+                    <span>Advokaát</span>
+                </a>     
+                <a href="/">
+                    <div class="top-profile"><img src="/images/ben.png" alt=""></div>
+                    <span>Ben Shapiro</span>
+                </a>               
+            </div>
+        {/if}
+        <a href="/" on:click={(e)=>{toggleCategory(e,'genre')}} class="side-button" class:side-button-opened={genreOpened}>
+            <span>Жанрове</span>
+            <i class='bx bx-chevron-down'></i>
+        </a>
+        {#if genreOpened}
+            <div transition:slide class="genre-dropdown">
+                <a href="/">
+                    <span>Рок</span>
+                </a>
+                <a href="/">
+                    <span>Блус</span>
+                </a>
+                <a href="/">
+                    <span>Метъл</span>
+                </a>    
+                <a href="/">
+                    <span>Класическа</span>
+                </a>              
+                <a href="/">
+                    <span>Фолк</span>
+                </a>     
+                <a href="/">
+                    <span>Джас</span>
+                </a>     
+                <a href="/">
+                    <span>Поп</span>
+                </a> 
+                <a href="/">
+                    <span>Електронна</span>
+                </a> 
+            </div>
+        {/if}
+        <a href="/" on:click={(e)=>{toggleCategory(e,'resources')}} class="side-button" class:side-button-opened={resourcesOpened}>
+            <span>Ресурси</span>
+            <i class='bx bx-chevron-down'></i>
+        </a>
+        {#if resourcesOpened}
+            <div transition:slide class="dropdown">
+                
+            </div>
+        {/if}
+        <a href="/" on:click={(e)=>{toggleCategory(e,'saved')}} class="side-button" class:side-button-opened={savedOpened}>
+            <span>Запазени</span>
+            <i class='bx bx-chevron-down'></i>
+        </a>
+        {#if savedOpened}
+            <div transition:slide class="dropdown">
+                
+            </div>
+        {/if}
+    </div>
 
 
 <style>
@@ -203,19 +203,16 @@
                 min-width: 0;
             }
     .side-nav{
-        position: absolute;
+        position: relative;
         display: flex;
         flex-direction: column;
-        width: 15%;
+        min-width: 17.5rem;
+        width:17.5rem;
         color: whitesmoke;
         background-color:var(--black1);
         padding: 1rem 0.5rem;
         overflow: hidden;
         z-index: 1;
-        margin-top: 6rem;
-        top:0%;
-        left:0%;
-        
     }
         .side-nav > a{
             text-decoration: none;
