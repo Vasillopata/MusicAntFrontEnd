@@ -1,22 +1,33 @@
-<script>
+<script lang="ts">
+    import {login} from '$lib/handlers/UserHandler'
 
+    let email: string = ''
+    let password: string = ''
 </script>
 
-<div class="Log-in">
-    <h1 style="position: absolute; top: 2.5rem;">log in</h1>
+<div class="wrap">
+    <div class="Log-in">
+    <h1 style="position: absolute; top: 2.5rem;">Вписване</h1>
     <div class="field">
-        <input type="text" id="username" placeholder=" ">
-        <label for="username">Username</label>
+        <input type="email" id="email" placeholder=" " bind:value={email}>
+        <label for="email">Имейл</label>
     </div>
     <div class="field">
-        <input type="password" id="password" placeholder=" ">
-        <label for="password">Password</label>
+        <input type="password" id="password" placeholder=" "  bind:value={password}>
+        <label for="password">Парола</label>
     </div>
-    <button class="sign-in-button">Log in</button>
-    <p>dont have an account? <a style="text-decoration: none;" href="/signup">Sign up</a></p>
+    <button class="sign-in-button" on:click={async(e)=>{await login(e,email,password)}}>Вписване</button>
+    <p>Нямаш акаунт? <a style="text-decoration: none;" href="/signup">Регистрирай се!</a></p>
+</div>
 </div>
 
 <style>
+    .wrap{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-right:8rem;
+    }
     .Log-in>p{
         margin-top: 1rem;
     }

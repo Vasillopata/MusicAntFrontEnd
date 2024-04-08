@@ -1,6 +1,8 @@
 <script lang="ts">
     import LikeButton from "../LikeButton.svelte";
     import { browser } from "$app/environment";
+    import SaveButton from "../SaveButton.svelte";
+
 
     export let imgURL: string
     
@@ -45,9 +47,11 @@
     </div>
     <div class="bot-post">
         <LikeButton/>
-        <button><i class='bx bx-message-square'></i></button>
+        <a href="/PostPage"><i class='bx bx-message-square'></i></a>
         <button><i class='bx bx-right-arrow'></i> </button>
-        <button style="margin-left: auto;"><i class='bx bx-bookmark'></i></button>
+        <div style="margin-left: auto;">
+            <SaveButton/>
+        </div>
     </div>
 </div>
 
@@ -181,7 +185,7 @@
     .post-separator{
         background-color: var(--black2);
         height: 1px;
-        width: 49rem;
+        width: 50rem;
         margin-top: 0.5rem;
         margin-bottom: 0.5rem;
     }

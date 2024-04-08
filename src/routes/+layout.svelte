@@ -5,17 +5,28 @@
     import "./style.css";
     import {slide} from 'svelte/transition';
     import { writable } from 'svelte/store';
+    import {isLoggedIn} from '$lib/handlers/UserHandler'
+    import {currentSearchQuery} from '$lib/stores/searchQuery'
+    
     let searchBarInput = ''
     let searchBarElement: HTMLInputElement|undefined = undefined
 
     let website: HTMLDivElement;
+    let loggedIn = false
     import { scrollY } from '$lib/store'
+    import { goto } from '$app/navigation';
 
-    onMount(() => {
-        website.addEventListener('scroll', () => {
+    onMount(async() => {
+        loggedIn = await isLoggedIn()
+        await website.addEventListener('scroll', () => {
             scrollY.set(website.scrollTop);
         });
     });
+    async function handleSearch(){
+        await currentSearchQuery.set(searchBarInput)
+        searchBarInput = ''
+        goto('/search')
+    }
 </script>
 
 
@@ -29,14 +40,26 @@
             </a>
         </div>
         <div style="position: relative; margin: 0 auto;">
-            <i class='bx bx-search' style="position: absolute; top:50%;left:1.5rem; font-size:2rem; transform:translateY(-50%); opacity:1 !important;z-index:1"></i>
+            <button class="search-button" on:click={async()=> {await handleSearch()} }>
+                <i class='bx bx-search'></i>
+            </button>
             <input placeholder="Търси..." class="search-bar" type="text" name="" bind:value={searchBarInput} bind:this={searchBarElement}> 
             {#if searchBarInput != ''}
                 <button on:click={()=>{searchBarInput = "";searchBarElement?.focus()}} transition:slide={{duration:400}} class="search-bar-clear"><i class='bx bx-message-square-x' ></i></button>
             {/if}
         </div>
         <a class="post-button" href="/posting">Качи</a>
+
+        {#if loggedIn}
+        <a href="/profile">
+            <div class="account-img">
+                <img src="/images/ale.jpg" alt="">
+            </div>
+        </a>
+            
+        {:else}
         <a style="text-decoration: none" href="/login"><button class="login-button">Вход</button></a>
+        {/if}
     </div>
     <div class="website-wrap-wrap">
         <LeftNav/>
@@ -50,10 +73,45 @@
 </div>
 
 <style>
+    .search-button{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute; 
+        height: 2rem;
+        width: 2rem;
+        top:50%;
+        left:0.8rem; 
+        font-size:2rem; 
+        transform:translateY(-50%); 
+        opacity:1 !important;z-index:1; 
+        background: none; 
+        border: none; 
+        color:whitesmoke;
+        transition: color 0.1s ease-in-out;
+    }
+        .search-button:hover>i{
+            color: var(--blue);
+        }
+    .account-img{
+        border-radius: 100%;
+        cursor: pointer;
+    }
+    .account-img>img{
+        object-fit: cover;
+        height: 4rem;
+        width: 4rem;
+        border-radius: 100%;
+        cursor: pointer;
+    }
+        .account-img>img:hover{
+            border: 1px solid var(--black2);
+        }
     .website-wrap-wrap {
         display:flex;
         overflow: auto;
         width: 100%;
+        height: 100%;
     }
     .website-wrap {
         display: flex;

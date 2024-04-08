@@ -1,26 +1,41 @@
-<script>
+<script lang="ts">
+    import {register} from '$lib/handlers/UserHandler'   
 
+    let email = ''
+    let username = ''
+    let password = ''
+    let birthdate: Date = new Date()
+    
 </script>
 
-<div class="Log-in">
-    <h1 style="position: absolute; top: 2.5rem;">Sign up</h1>
-    <div class="field">
-        <input type="email" id="Email" placeholder=" ">
-        <label for="Email">Email</label>
+<div class="wrap">
+    <div class="sign-up">
+        <h1 style="position: absolute; top: 2.5rem;">Създай профил</h1>
+        <div class="field">
+            <input type="email" id="Email" placeholder=" " bind:value={email}>
+            <label for="Email">Имейл</label>
+        </div>
+        <div class="field">
+            <input type="text" id="Username" placeholder=" " bind:value={username}>
+            <label for="Username">Потребителско име</label>
+        </div>
+        <div class="field">
+            <input type="password" id="password" placeholder=" " bind:value={password}>
+            <label for="password">Парола</label>
+        </div>
+        <input class="birthday-input" type="date" bind:value={birthdate}>
+        <button on:click={async(e)=>{await register(e, email, username, password, birthdate)}} class="sign-in-button">Рeгистрация</button>
     </div>
-    <div class="field">
-        <input type="text" id="Username" placeholder=" ">
-        <label for="Username">Username</label>
-    </div>
-    <div class="field">
-        <input type="password" id="password" placeholder=" ">
-        <label for="password">Password</label>
-    </div>
-    <input class="birthday-input" type="date">
-    <button class="sign-in-button">Sign up</button>
 </div>
 
+
 <style>
+    .wrap{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-right: 8rem;
+    }
     .birthday-input{
         margin-top: 1rem;
         margin-left: -11.5rem;
@@ -61,7 +76,7 @@
         border: none;
         font-size: 1.55rem;
     }
-    .Log-in{
+    .sign-up{
         position: relative;
         display: flex;
         flex-direction: column;
@@ -114,4 +129,4 @@
         color: transparent;
     }
 
-</style>    
+</style>

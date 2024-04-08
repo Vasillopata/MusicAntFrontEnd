@@ -2,12 +2,12 @@
     import { browser } from "$app/environment";
 
     //export const postId:number; !!!!!!!!!!!!!!
-    let liked = false
+    let saved = false
     
 
 </script>
 
-<button id='temp' on:click={()=>{liked = !liked}} class:like-active={liked}><i class='bx {liked ? 'bxs-heart' : 'bx-heart'}' ></i></button>
+<button id='temp' on:click={()=>{saved = !saved}} class:like-active={saved}><i class='bx {saved ? 'bxs-bookmark' : 'bx-bookmark'}' ></i></button>
 
 <style>
 
@@ -18,32 +18,32 @@
         z-index: 1;
     }
     .like-active {
-        color: red;
+        color: var(--blue);
     }
         .like-active > i {
-            color: red;
+            color: var(--blue);
         }
         button > i {
             z-index: 0;
         }
-    :global(.bxs-heart){
-        font-size: 2.5rem;
+    :global(.bxs-bookmark){
+        font-size: 2.6rem;
         transition: all 0.1s;
         cursor: pointer;
         
     }
-        :global(.bxs-heart:hover){
+        :global(.bxs-bookmark:hover){
             scale: 0.9;
         }
-    :global(.bx-heart){
+    :global(.bx-bookmark){
         color: whitesmoke;
-        font-size: 2.5rem;
+        font-size: 2.6rem;
         transition: color 0.1s ease-in-out;
         cursor: pointer;
 
     }   
-        :global(.bx-heart:hover){
-            color: red !important;
+        :global(.bx-bookmark:hover){
+            color: var(--blue) !important;
         }
     
 </style>

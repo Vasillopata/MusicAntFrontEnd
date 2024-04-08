@@ -1,6 +1,7 @@
 <script lang="ts">
     import { browser } from "$app/environment";
     import LikeButton from "../LikeButton.svelte";
+    import SaveButton from "../SaveButton.svelte";
 
     export let imgURL: string
     
@@ -18,15 +19,19 @@
     <div class="post-title">
         defend women rights
     </div>
-    <div class="mid-post">
-        <img class="fg-image" src={imgURL} alt="">
-        <img class="bg-image" src={imgURL} alt="">
-    </div>
+    <a href="/PostPage">
+        <div class="mid-post">
+            <img class="fg-image" src={imgURL} alt="">
+            <img class="bg-image" src={imgURL} alt="">
+        </div>
+    </a>
     <div class="bot-post">
         <LikeButton/>
-        <button><i class='bx bx-message-square'></i></button>
+        <a href="/PostPage"><i class='bx bx-message-square'></i></a>
         <button><i class='bx bx-right-arrow'></i> </button>
-        <button style="margin-left: auto;"><i class='bx bx-bookmark'></i></button>
+        <div style="margin-left: auto;">
+        <SaveButton/>
+        </div>
     </div>
 </div>
 <style>
@@ -48,16 +53,6 @@
         .bx-message-square:hover{
             color: var(--blue);
         }
-    
-    .bx-bookmark{
-        color: whitesmoke;
-        font-size: 2.5rem;
-        transition: color 0.1s ease-in-out;
-        cursor: pointer;
-    }   
-    .bx-bookmark:hover{
-        color: var(--blue);
-    }
     .post-title{
         display: flex;
         font-size: 1.4rem;
@@ -130,11 +125,9 @@
         border-radius: 3rem;
     }
     .post-separator{
-        background-color: var(--black2);
+        width: 50rem;
         height: 1px;
-        width: 49rem;
-        margin-top: 0.5rem;
-        margin-bottom: 0.5rem;
+        background-color: var(--black2);
     }
     .top-post > p:hover{
         cursor: pointer;

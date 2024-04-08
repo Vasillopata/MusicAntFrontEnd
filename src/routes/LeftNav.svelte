@@ -1,6 +1,10 @@
 <script lang='ts'>
   import { slide } from "svelte/transition";
+  import AddComunity from "./AddComunity.svelte";
+    import { logout } from "$lib/handlers/UserHandler";
 
+    let addcommunity = false
+    
     let fansOpened = false
     let genreOpened = false
     let resourcesOpened = false
@@ -39,7 +43,7 @@
 
     <div class="side-nav">
         <a href="/" on:click={(e)=>{toggleCategory(e,'fans')}} class="side-button" class:side-button-opened={fansOpened}>
-            <span>Фенове</span>
+            <span>Скорошни Фенове</span>
             <i class='bx bx-chevron-down'></i>
         </a>
         {#if fansOpened}
@@ -54,7 +58,7 @@
                 </a>    
                 <a href="/account">
                     <div class="top-profile"><img src="/images/ale.jpg" alt=""></div>
-                    <span>Dr Porn</span>
+                    <span>Dr Korn</span>
                 </a>                  
                 <a href="/">
                     <div class="top-profile"><img src="/images/advokad.png" alt=""></div>
@@ -67,35 +71,32 @@
             </div>
         {/if}
         <a href="/" on:click={(e)=>{toggleCategory(e,'genre')}} class="side-button" class:side-button-opened={genreOpened}>
-            <span>Жанрове</span>
+            <span>Твоите общности</span>
             <i class='bx bx-chevron-down'></i>
         </a>
         {#if genreOpened}
-            <div transition:slide class="genre-dropdown">
+            <div transition:slide class="dropdown-community">
+                <AddComunity/>
                 <a href="/">
-                    <span>Рок</span>
+                    <div class="top-profile-community"><img src="/images/moni.jpg" alt=""></div>
+                    <span>community</span>
                 </a>
                 <a href="/">
-                    <span>Блус</span>
-                </a>
-                <a href="/">
-                    <span>Метъл</span>
+                    <div class="top-profile-community"><img src="/images/papi.png" alt=""></div>
+                    <span>community</span>
                 </a>    
+                <a href="/account">
+                    <div class="top-profile-community"><img src="/images/ale.jpg" alt=""></div>
+                    <span>community</span>
+                </a>                  
                 <a href="/">
-                    <span>Класическа</span>
-                </a>              
-                <a href="/">
-                    <span>Фолк</span>
+                    <div class="top-profile-community"><img src="/images/advokad.png" alt=""></div>
+                    <span>community</span>
                 </a>     
                 <a href="/">
-                    <span>Джас</span>
-                </a>     
-                <a href="/">
-                    <span>Поп</span>
-                </a> 
-                <a href="/">
-                    <span>Електронна</span>
-                </a> 
+                    <div class="top-profile-community"><img src="/images/ben.png" alt=""></div>
+                    <span>community</span>
+                </a>               
             </div>
         {/if}
         <a href="/" on:click={(e)=>{toggleCategory(e,'resources')}} class="side-button" class:side-button-opened={resourcesOpened}>
@@ -104,10 +105,11 @@
         </a>
         {#if resourcesOpened}
             <div transition:slide class="dropdown">
-                
+                <a href="/">Помощ</a>
+                <a href="/">Правила</a>
             </div>
         {/if}
-        <a href="/" on:click={(e)=>{toggleCategory(e,'saved')}} class="side-button" class:side-button-opened={savedOpened}>
+        <!-- <a href="/" on:click={(e)=>{toggleCategory(e,'saved')}} class="side-button" class:side-button-opened={savedOpened}>
             <span>Запазени</span>
             <i class='bx bx-chevron-down'></i>
         </a>
@@ -115,7 +117,8 @@
             <div transition:slide class="dropdown">
                 
             </div>
-        {/if}
+        {/if} -->
+        <button on:click={logout}>Изход</button>
     </div>
 
 
@@ -133,37 +136,6 @@
         margin-right: 0.5rem;
         margin-bottom: 0.5rem;
     }
-    .genre-dropdown{
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        width: 16rem;
-        margin: 0 0.5rem 1rem 0.5rem;
-        padding: 0 1rem 0 0.5rem;
-        border-left: 1px solid var(--black1-hover);
-    }
-        .genre-dropdown>a{
-            align-items: center;
-            display: flex;
-            flex-direction: row;
-            color: whitesmoke;
-            text-decoration: none;
-            width: 100%;
-            border-bottom: 1px solid var(--black1);
-            margin-bottom: 0.5rem;
-            z-index: 3;
-            position: relative;
-            font-size: 1.2rem;
-        }   
-            .genre-dropdown>a>span{
-                width: 10rem;
-                margin-bottom: 0.5rem;
-                text-wrap: wrap;
-                word-break: break-all;
-            }
-            .genre-dropdown>a>:hover{
-                color: var(--blue);
-            }
         .top-profile>img{
             border-radius: inherit;
             object-fit: cover;
@@ -176,6 +148,54 @@
                 cursor: pointer;
                 transition: border-radius 0.15s ease-in-out;
             }
+    .dropdown-community{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        width: 100%;
+        padding: 0 1rem 0 0.75rem;
+        border-left: 1px solid var(--black1-hover);
+    }
+
+        .dropdown-community>a{
+            align-items: center;
+            display: flex;
+            flex-direction: row;
+            color: whitesmoke;
+            text-decoration: none;
+            width: 100%;
+            border-bottom: 1px solid var(--black1);
+            margin-bottom: 0.5rem;
+            z-index: 3;
+            position: relative;
+        }   
+            .dropdown-community>a>span{
+                margin-bottom: 0.5rem;
+                overflow: hidden;
+                text-overflow:ellipsis;
+                min-width: 0;
+            }
+    .top-profile-community{
+        display: flex;
+        flex-direction: row;
+        height: 3rem !important;
+        width: 3rem !important;
+        min-width: 3rem;
+        overflow: hidden;
+        z-index: 1;
+        border-radius: 10%;
+        transition: border-radius 0.2s ease-in-out;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+        .top-profile-community>img{
+            border-radius: inherit;
+            object-fit: cover;
+            border-radius: 10%;
+            width: 100%;
+            height: 100%;
+            z-index:0;
+        }
     .dropdown{
         display: flex;
         flex-direction: column;
@@ -203,7 +223,6 @@
                 min-width: 0;
             }
     .side-nav{
-        position: relative;
         display: flex;
         flex-direction: column;
         min-width: 17.5rem;
@@ -212,7 +231,7 @@
         background-color:var(--black1);
         padding: 1rem 0.5rem;
         overflow: hidden;
-        z-index: 1;
+        z-index: 3;
     }
         .side-nav > a{
             text-decoration: none;

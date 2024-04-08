@@ -1,22 +1,52 @@
 <script lang="ts">
-    import { backInOut, circInOut, cubicInOut, linear, sineInOut } from "svelte/easing";
-    import { fade, fly, slide } from "svelte/transition";
+    import { fade } from "svelte/transition";
+    import Croppie from "croppie";
+    import {getUserName} from '$lib/handlers/AccountHandler'
+    import { onMount } from "svelte";
 
     let selectedPostType = 'img'
     let imageUrl = ''
     let textInput = ''
     let titleInput = ''
-    function handleFileUpload(event: Event) {
+    let croppieElement: HTMLDivElement;
+    let croppieInstance: Croppie;
+    let croppieActive = false;
+    let username = ''
+
+
+   function handleFileUpload(event: Event) {
+        croppieActive = true;
         const file = (event.target as HTMLInputElement)?.files?.[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
                 imageUrl = reader.result as string;
+                croppieInstance = new Croppie(croppieElement, {
+                    viewport: { width: 798, height: 592 },
+                    showZoomer: false,
+                    enableZoom: true,
+                    enforceBoundary: false
+                });
+                croppieInstance.bind({
+                    url: imageUrl,
+                });
             };
             reader.readAsDataURL(file);
         }
     }
-    $: postReady = titleInput != '' && ((selectedPostType == "img" && imageUrl != '') || (selectedPostType == "imgtxt" && imageUrl != '' && textInput != "" ) || (selectedPostType == "txt" && textInput != "" ))
+
+    $: postReady = titleInput != '' && ((selectedPostType == "img" && imageUrl != '') || (selectedPostType == "imgtxt" && imageUrl != '' && textInput != "" ) || (selectedPostType == "txt" && textInput != "" ));
+
+    function cropImage() {
+        croppieInstance.result({ format: "jpeg", size: "viewport" }).then(function (result:any) {
+            imageUrl = result;
+        });
+        croppieActive = false;
+    }
+
+    onMount(async()=>{
+        username = await getUserName()
+    })
 
 </script>
 
@@ -38,14 +68,14 @@
             <div class="top-profile">
                 <img src="https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg" alt="">
             </div>
-            <p>OodaOdaodadadadadaOoda</p>
+            <p>{username}</p>
         </div>
         <div class="post-title">
             <input bind:value={titleInput} placeholder="Заглавие..." type="text">
         </div>
         {#if selectedPostType == 'img'}
             <div class="create-post-img">
-                <label for="image" class="custom-file-input" style="background-image: url({imageUrl!=null ? imageUrl : ""}); background-repeat: no-repeat; background-size:contain; background-position:center;">
+                <label for="image" class="custom-file-input" style="background-image: url({imageUrl!=null ? imageUrl : ""}); background-repeat: no-repeat; background-size:contain; background-position:center; opacity:{croppieActive ? "0" : ""}">
                     {#if imageUrl}
                         <span>Change</span>
                     {:else}
@@ -53,10 +83,15 @@
                     {/if}
                 </label>
                 <input bind:value={imageUrl} id="image" type="file" name="image" accept="image/*" style="display: none;" on:change={handleFileUpload} />
+                {#if croppieActive}
+                <div bind:this={croppieElement}>
+                    <button on:click={cropImage}><i class='bx bx-crop'></i></button>
+                </div>
+                {/if}
             </div>
         {:else if selectedPostType == 'imgtxt'}
             <div class="create-post-imgtxt">
-                <label for="image" class="custom-file-input" style="background-image: url({imageUrl!=null ? imageUrl : ""}); background-repeat: no-repeat; background-size:contain; background-position:center;">
+                <label for="image" class="custom-file-input" style="background-image: url({imageUrl!=null ? imageUrl : ""}); background-repeat: no-repeat; background-size:contain; background-position:center; opacity:{croppieActive ? "0" : ""}">
                     {#if imageUrl}
                         <span>Change</span>
                     {:else}
@@ -64,6 +99,11 @@
                     {/if}
                 </label>
                 <input bind:value={imageUrl} id="image" type="file" name="image" accept="image/*" style="display: none;" on:change={handleFileUpload} />
+                {#if croppieActive}
+                <div bind:this={croppieElement}>
+                    <button on:click={cropImage}><i class='bx bx-crop'></i></button>
+                </div>
+                {/if}
             </div>
             <div  class="txt-for-imgtxt">
                 <textarea bind:value={textInput} placeholder="Текст..."></textarea>
@@ -82,14 +122,40 @@
 
 
 <style>
+    :global(.croppie-container) {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 9999; /* Adjust z-index as needed */
+        box-sizing: border-box !important;
+    }
+        :global(.croppie-container > button) {
+            position: absolute;
+            bottom: 0;
+            right:0;
+            width: 4rem;
+            height:4rem;
+            z-index: 999;
+            margin: 0 2rem 2rem 0;
+            outline: none;
+            border: none;
+            border-radius: 1rem;
+            font-size: 2rem;
+            line-height: 2rem;
+            background-color: var(--blue);
+            color: whitesmoke;
+            transition: opacity 0.1s ease-in-out;
+        }
+            :global(.croppie-container > button:hover) {
+                opacity:0.9;
+            }
     .submit-button{
         display: flex;
-        left: 100%;
         margin-left: 1rem;
         position: absolute;
-        border-radius: 1.5rem;
-        background-color: var(--black1);
         bottom: 0rem;
+        left: 76%;
+        background-color: transparent;
         align-items: center;
         justify-content: center;
         border: none;
@@ -108,6 +174,7 @@
         flex-direction: column;
         position: relative;
         align-items: center;
+        margin-right: 8rem;
     }
 
     .txt-for-imgtxt{
@@ -204,6 +271,7 @@
         }
     .create-post-img{
         border: 1px solid var(--black2);
+        position: relative;
     }
         .create-post-img:hover{
             color: var(--blue);
@@ -291,29 +359,9 @@
         padding-left: 0.6rem;
         border-top: hidden;
     }
-    .mid-post{
-        display: flex;
-        flex-direction: row;
-        border: 1px solid var(--black2);
-        width: 100%;
-        min-height: 20rem;  /* временни мин и макс !!!!!!!!!!!*/
-        max-height: 40rem;  /* временни мин и макс !!!!!!!!!!!*/
-    }
         .top-post>p{
             margin-bottom: 0px;  
             margin-left: 0.3rem;
         }
-        .mid-post >img{
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-    .bot-post{
-        display: flex;
-        flex-direction: row;
-        border: 1px solid var(--black2);
-        height: 4rem;
-        align-items: center;
-        padding-left: 0.6rem;
-    }
+        
 </style>

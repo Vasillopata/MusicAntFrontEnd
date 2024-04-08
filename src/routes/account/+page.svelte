@@ -12,7 +12,7 @@
     </div>
     <div class="account-img">
             <img src="/images/ale.jpg" alt="">
-            <p>Dr Ale</p>
+            <p>Dr Korn</p>
         <div class="account-buttons">
             <button>
                 Съобщение
@@ -41,6 +41,7 @@
         margin-left: 17rem;
     }
     .account-page{
+        margin-top: 1rem;
         display: flex;
         flex-direction: column;
         align-items: start;
