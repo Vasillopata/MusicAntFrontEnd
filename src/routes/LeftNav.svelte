@@ -1,7 +1,7 @@
 <script lang='ts'>
   import { slide } from "svelte/transition";
   import AddComunity from "./AddComunity.svelte";
-    import { logout } from "$lib/handlers/UserHandler";
+  import { logout } from "$lib/handlers/UserHandler";
 
     let addcommunity = false
     
@@ -49,24 +49,24 @@
         {#if fansOpened}
             <div transition:slide class="dropdown">
                 <a href="/">
-                    <div class="top-profile"><img src="/images/moni.jpg" alt=""></div>
-                    <span>xX.woman_Under5tander.Xx</span>
+                    <div class="top-profile"><img src="/images/account.png" alt=""></div>
+                    <span>Vasil Petrov</span>
                 </a>
                 <a href="/">
                     <div class="top-profile"><img src="/images/papi.png" alt=""></div>
-                    <span>Iskender Nursultan Aziz Öztürk</span>
+                    <span>RockEnjoyer123</span>
                 </a>    
                 <a href="/account">
                     <div class="top-profile"><img src="/images/ale.jpg" alt=""></div>
-                    <span>Dr Korn</span>
+                    <span>Dr music</span>
                 </a>                  
                 <a href="/">
                     <div class="top-profile"><img src="/images/advokad.png" alt=""></div>
-                    <span>Advokaát</span>
+                    <span>Ivan Petrov</span>
                 </a>     
                 <a href="/">
-                    <div class="top-profile"><img src="/images/ben.png" alt=""></div>
-                    <span>Ben Shapiro</span>
+                    <div class="top-profile"><img src="/images/account.png" alt=""></div>
+                    <span>Account</span>
                 </a>               
             </div>
         {/if}
@@ -78,23 +78,23 @@
             <div transition:slide class="dropdown-community">
                 <AddComunity/>
                 <a href="/">
-                    <div class="top-profile-community"><img src="/images/moni.jpg" alt=""></div>
+                    <div class="top-profile-community"><img src="/images/account.png" alt=""></div>
                     <span>community</span>
                 </a>
                 <a href="/">
-                    <div class="top-profile-community"><img src="/images/papi.png" alt=""></div>
+                    <div class="top-profile-community"><img src="/images/account.png" alt=""></div>
                     <span>community</span>
                 </a>    
                 <a href="/account">
-                    <div class="top-profile-community"><img src="/images/ale.jpg" alt=""></div>
+                    <div class="top-profile-community"><img src="/images/account.png" alt=""></div>
                     <span>community</span>
                 </a>                  
                 <a href="/">
-                    <div class="top-profile-community"><img src="/images/advokad.png" alt=""></div>
+                    <div class="top-profile-community"><img src="/images/account.png" alt=""></div>
                     <span>community</span>
                 </a>     
                 <a href="/">
-                    <div class="top-profile-community"><img src="/images/ben.png" alt=""></div>
+                    <div class="top-profile-community"><img src="/images/account.png" alt=""></div>
                     <span>community</span>
                 </a>               
             </div>
@@ -118,7 +118,7 @@
                 
             </div>
         {/if} -->
-        <button on:click={logout}>Изход</button>
+        
     </div>
 
 

@@ -9,13 +9,13 @@
 <hr>
 <div class="comentator">
     <div class="profile-pick">
-        <img src="/images/moni.jpg" alt="">
+        <img src="/images/ale.jpg" alt="">
     </div>
-    <p>Name</p>
+    <p>Jon Doe</p>
 </div>
 <div class="comment">
     <p>
-        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu
+        Japanese nature is a breathtaking tapestry woven with delicate cherry blossoms, majestic mountains, tranquil bamboo forests, and serene Zen gardens. Each element harmonizes with the others to create a landscape that is both awe-inspiring and deeply calming. Whether you're exploring the vibrant streets of Tokyo or hiking through the misty forests of Nikko, Japan's natural beauty will leave you spellbound.
     </p>
     <div class="bottom-comment">
         <div>

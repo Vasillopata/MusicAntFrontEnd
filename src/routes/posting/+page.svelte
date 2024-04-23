@@ -122,6 +122,7 @@
 
 
 <style>
+    
     :global(.croppie-container) {
         position: absolute;
         top: 0;

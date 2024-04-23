@@ -7,7 +7,7 @@
 </script>
 
 <button class="add-community" on:click={()=>{addcommunity = !addcommunity}}>
-    <p><i class='bx bx-plus'></i>Създай група</p>
+    <p><i class='bx bx-plus'></i>Създай общност</p>
     
 </button>
 

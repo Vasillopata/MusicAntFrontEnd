@@ -31,26 +31,26 @@
 <div class="post">
     <div class="top-post">
         <div class="top-profile">
-            <img src="/images/moni.jpg" alt="">
+            <img src="/images/ale.jpg" alt="">
         </div>
-        <p>xX.woman_Under5tander.Xx</p>
+        <p>Jon Doe</p>
     </div>
     <div class="post-title">
-        defend women rights
+        tower of pisa
     </div>
     <div class="mid-post">
         <img class="fg-image" src={imgURL} alt="">
         <img class="bg-image" src={imgURL} alt="">
     </div>
     <div class="post-txt">
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt
+        The Leaning Tower of Pisa, an architectural marvel nestled in the heart of Italy, stands as a testament to both human ingenuity and the whims of physics. Its iconic tilt, caused by unstable ground during its construction in the 12th century, has captivated visitors for centuries.
+        As you gaze upon its elegant white marble facade, you can't help but marvel at its lean, a result of both its unintended deviation from the vertical and the careful engineering feats that have kept it standing for generations.
     </div>
     <div class="bot-post">
         <LikeButton/>
         <a href="/PostPage"><i class='bx bx-message-square'></i></a>
-        <button><i class='bx bx-right-arrow'></i> </button>
         <div style="margin-left: auto;">
-            <SaveButton/>
+        <SaveButton/>
         </div>
     </div>
 </div>

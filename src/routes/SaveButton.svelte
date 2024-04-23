@@ -1,10 +1,7 @@
 <script lang="ts">
     import { browser } from "$app/environment";
 
-    //export const postId:number; !!!!!!!!!!!!!!
     let saved = false
-    
-
 </script>
 
 <button id='temp' on:click={()=>{saved = !saved}} class:like-active={saved}><i class='bx {saved ? 'bxs-bookmark' : 'bx-bookmark'}' ></i></button>

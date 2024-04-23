@@ -40,9 +40,7 @@
         margin-top: 1rem;
         margin-left: -11.5rem;
     }
-    /* Targeting the input[type=date] */
     input[type=date] {
-    /* Your custom styles */
     padding: 8px;
     width: 13.6rem;
     border-radius: 4px;
@@ -55,14 +53,10 @@
         background-color: var(--black1) ;
         outline: none;
         }
-    /* Styling the date picker icon */
     input[type=date]::-webkit-calendar-picker-indicator {
-    /* Your custom styles */
         height: 2rem;
         width: 2rem;
     }
-
-    /* Optional: Styling the placeholder text */
     input[type=date]::placeholder {
     color: #999;
     }

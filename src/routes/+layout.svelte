@@ -1,12 +1,12 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import LeftNav from './LeftNav.svelte';
-    import RightNav from "./RightNav.svelte";
     import "./style.css";
     import {slide} from 'svelte/transition';
     import { writable } from 'svelte/store';
-    import {isLoggedIn} from '$lib/handlers/UserHandler'
+    import {isLoggedIn, logout} from '$lib/handlers/UserHandler'
     import {currentSearchQuery} from '$lib/stores/searchQuery'
+    
     
     let searchBarInput = ''
     let searchBarElement: HTMLInputElement|undefined = undefined
@@ -48,15 +48,19 @@
                 <button on:click={()=>{searchBarInput = "";searchBarElement?.focus()}} transition:slide={{duration:400}} class="search-bar-clear"><i class='bx bx-message-square-x' ></i></button>
             {/if}
         </div>
-        <a class="post-button" href="/posting">Качи</a>
-
+        {#if loggedIn}
+            <a class="post-button" href="/posting">Качи</a>
+        {/if}
         {#if loggedIn}
         <a href="/profile">
             <div class="account-img">
                 <img src="/images/ale.jpg" alt="">
+                <div class="dropdown">
+                    <a href="/profile">Профил</a>
+                    <button on:click={logout}>Изход</button>
+                </div>
             </div>
         </a>
-            
         {:else}
         <a style="text-decoration: none" href="/login"><button class="login-button">Вход</button></a>
         {/if}
@@ -67,12 +71,52 @@
             <main>
                 <slot/>
             </main>
-            <RightNav/>
         </div>
     </div>
 </div>
 
 <style>
+    .dropdown {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        padding: 0.2rem 0 0.2rem 0;
+        font-size: 1.6rem;
+        background-color: var(--darkest);
+        right: 2rem;
+        top: 6rem;
+        width: 12rem;
+        border-radius: 1rem;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+        opacity: 0;
+        visibility: hidden;
+    }
+    .account-img:hover .dropdown, .dropdown:hover {
+        display: flex;
+        opacity: 1;
+        visibility: visible;
+    }
+        .dropdown>button{
+           background-color: transparent;
+           color: whitesmoke;
+           outline: none;
+           border: none;    
+           border-radius: 1rem;
+           transition: color 0.1s ease-in-out;
+        }
+            .dropdown>button:hover{
+                color: red;
+            }
+        .dropdown>a{
+            color: whitesmoke;
+            text-decoration: none;
+            transition: color 0.1s ease-in-out;
+        }
+            .dropdown>a:hover{
+                color: var(--blue);
+            }
     .search-button{
         display: flex;
         justify-content: center;
