@@ -1,10 +1,24 @@
 <script lang="ts">
     import { quintOut } from "svelte/easing";
     import { fade, slide } from "svelte/transition";
-    import Post from "../Posts/Post.svelte";
+    import PostReal from "../../Posts/PostReal.svelte";
+    import {getPosts} from "$lib/handlers/PostHandler";
+    import { page } from "$app/stores";
+    import { onMount } from "svelte";
+    import { getUserNameById } from "$lib/handlers/UserHandler";
 
     let bellRing = false 
     let isFan = false 
+    let posts: number[] = []
+    let userId: number
+    let userName: string
+
+
+    onMount(async()=>{
+        userId = Number($page.params.userid)
+        posts = await getPosts(userId, 1, 5, 0)
+        userName = await getUserNameById(userId)
+    })
 </script>
 <div class="account-page">
     <div class="account-background">
@@ -12,10 +26,10 @@
     </div>
     <div class="account-img">
             <img src="/images/ale.jpg" alt="">
-            <p>Dr Korn</p>
+            <p>{userName}</p>
         <div class="account-buttons">
             <button>
-                Съобщение
+                Съобщени
             </button>
             {#if isFan}
                 <button on:click={()=>{bellRing = !bellRing}} transition:slide={{duration:300, axis:"x", easing: quintOut}} class="bell">
@@ -29,9 +43,9 @@
     </div>
     <div style="display: flex; flex-direction:row; justify-content:space-between">
         <div class="post-list">
-            <Post imgURL={'/images/papi1.jpg'}/>
-            <Post imgURL={'/images/papi1.jpg'}/>
-            <Post imgURL={'/images/papi1.jpg'}/>
+            {#each posts as id}
+                <PostReal postId={id}/> 
+            {/each}
         </div>
     </div>
 </div>

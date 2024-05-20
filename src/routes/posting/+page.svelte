@@ -3,6 +3,9 @@
     import Croppie from "croppie";
     import {getUserName} from '$lib/handlers/AccountHandler'
     import { onMount } from "svelte";
+    import { createPost } from "$lib/handlers/PostHandler";
+    import type { Post } from "$lib/handlers/PostHandler";
+    import { goto } from "$app/navigation";
 
     let selectedPostType = 'img'
     let imageUrl = ''
@@ -14,7 +17,7 @@
     let username = ''
 
 
-   function handleFileUpload(event: Event) {
+    async function handleFileUpload(event: Event) {
         croppieActive = true;
         const file = (event.target as HTMLInputElement)?.files?.[0];
         if (file) {
@@ -37,8 +40,8 @@
 
     $: postReady = titleInput != '' && ((selectedPostType == "img" && imageUrl != '') || (selectedPostType == "imgtxt" && imageUrl != '' && textInput != "" ) || (selectedPostType == "txt" && textInput != "" ));
 
-    function cropImage() {
-        croppieInstance.result({ format: "jpeg", size: "viewport" }).then(function (result:any) {
+    async function cropImage() {
+        await croppieInstance.result({ format: "jpeg", size: "viewport" }).then(function (result:any) {
             imageUrl = result;
         });
         croppieActive = false;
@@ -47,6 +50,12 @@
     onMount(async()=>{
         username = await getUserName()
     })
+
+    async function handlePost() {
+        let img = await fetch(imageUrl).then(res => res.blob());
+        let id = await createPost(titleInput, textInput, img, null)
+        await goto(`/post/${id}`)
+    }
 
 </script>
 
@@ -85,7 +94,7 @@
                 <input bind:value={imageUrl} id="image" type="file" name="image" accept="image/*" style="display: none;" on:change={handleFileUpload} />
                 {#if croppieActive}
                 <div bind:this={croppieElement}>
-                    <button on:click={cropImage}><i class='bx bx-crop'></i></button>
+                    <button on:click={async ()=>{await cropImage()}}><i class='bx bx-crop'></i></button>
                 </div>
                 {/if}
             </div>
@@ -101,7 +110,7 @@
                 <input bind:value={imageUrl} id="image" type="file" name="image" accept="image/*" style="display: none;" on:change={handleFileUpload} />
                 {#if croppieActive}
                 <div bind:this={croppieElement}>
-                    <button on:click={cropImage}><i class='bx bx-crop'></i></button>
+                    <button on:click={async ()=>{await cropImage()}}><i class='bx bx-crop'></i></button>
                 </div>
                 {/if}
             </div>
@@ -114,9 +123,12 @@
             </div>
         {/if}
     </div>
-    {#if postReady }
-        <button transition:fade={{duration: 100}} class="submit-button">Качи</button>
-    {/if}
+    
+        <button transition:fade={{duration: 100}} class="submit-button" class:submit-inactive={!postReady} on:click={
+            async()=>{
+                await handlePost()
+            }
+        }>Качи</button>
 </div>
 
 
@@ -155,20 +167,27 @@
         margin-left: 1rem;
         position: absolute;
         bottom: 0rem;
-        left: 76%;
+        right: 20rem;
         background-color: transparent;
         align-items: center;
         justify-content: center;
         border: none;
+        background-color: var(--darkest);
         outline: none;            
-        color: var(--blue);
-        border-radius: 1.5rem;
+        color: whitesmoke;
+        border-radius: 0.5rem;
         font-size: 2rem;
         padding: 0.2rem;
+        width: 8rem;
+        height: 4rem;
         transition: all 0.1s ease-in-out;
     }
+    .submit-inactive{
+        opacity: 0.5;
+        pointer-events: none;
+    }
         .submit-button:hover{
-            color: whitesmoke;
+            color: var(--blue);
         }
     .create-post-area{
         display: flex;

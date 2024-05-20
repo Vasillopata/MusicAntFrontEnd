@@ -1,7 +1,18 @@
-<script>
-    import { onMount } from 'svelte';
-    import LikeButton from '../LikeButton.svelte';
-    import SaveButton from '../SaveButton.svelte';
+<script lang="ts">
+    import { browser } from "$app/environment";
+    import LikeButton from "../LikeButton.svelte";
+    import SaveButton from "../SaveButton.svelte";
+    import {getPostById, getPostImg} from "$lib/handlers/PostHandler";
+    import type {Post} from "$lib/handlers/PostHandler";
+    import { onMount } from "svelte";
+    export let postId: number  
+    
+    let post: Post|undefined = undefined
+    let imgURL: string
+    onMount(async ()=>{
+        imgURL = await getPostImg(postId);
+        post = await getPostById(postId);
+    })
 </script>
 
 <div class="post-separator"></div>
@@ -13,13 +24,14 @@
         <p>Jon Doe</p>
     </div>
     <div class="post-title">
-        SLAYER
+        {post?.title}
     </div>
+    <a href="/PostPage">
         <div class="mid-post">
-            As you ascend higher, the subtle incline becomes more pronounced, creating a thrilling sensation of defying gravity. Yet, the tower's lean is not just a physical anomaly; it's a metaphor for resilience and adaptation. Despite its apparent flaw, the tower has withstood the test of time, surviving earthquakes, wars, and centuries of weathering.
-            From the top of the tower, the panoramic vista unfolds before you like a masterpiece painting, with the rolling hills of Tuscany stretching into the distance. Below, the bustling streets of Pisa bustle with life, while the serene Arno River meanders through the landscape, reflecting the beauty of the city's Renaissance architecture.
-            As you stand atop this architectural wonder, you can't help but feel a sense of awe and wonder at the craftsmanship of those who built it centuries ago. The Leaning Tower of Pisa is more than just a leaning edifice; it's a symbol of human ambition, perseverance, and the enduring power of art to inspire and captivate us across generations.
+            <img class="fg-image" src={imgURL} alt="">
+            <img class="bg-image" src={imgURL} alt="">
         </div>
+    </a>
     <div class="bot-post">
         <LikeButton/>
         <a href="/PostPage"><i class='bx bx-message-square'></i></a>
@@ -28,15 +40,7 @@
         </div>
     </div>
 </div>
-    
 <style>
-    .post-separator {
-        background-color: var(--black2);
-        height: 1px;
-        width: 50rem;
-        margin-top: 0.5rem;
-        margin-bottom: 0.5rem;
-    }
     .bx-message-square{
         color: whitesmoke;
         font-size: 2.5rem;
@@ -76,16 +80,23 @@
         padding-left: 0.3rem;
     }
     .mid-post{
-        text-decoration: none !important;
-        color: whitesmoke;
         display: flex;
         flex-direction: row;
         width: 100%;
-        height: 18rem;
+        height: 40rem;
         position: relative;
         overflow: hidden;
         border-radius: 1rem;
+        border: 1px solid var(--black2);
     }
+        .mid-post>.fg-image{
+            border-radius: 1rem;
+            height: 100%;
+            width: 100%;
+            object-fit:contain;
+            z-index: 2;
+            filter: drop-shadow(0px 0px 4px var(--black1)) ;
+        }
         .top-post>p{
             margin-bottom: 0px;
             margin-left: 0.3rem;
@@ -97,6 +108,19 @@
         align-items: center;
         padding-left: 0.3rem;
     }
+    .bg-image{
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        object-fit: cover;
+        width: 105%;
+        height: 105%;
+        opacity: 0.25;
+        filter: blur(10px);
+        z-index: 1;
+        border-radius: 3rem;
+    }
     .post-separator{
         width: 50rem;
         height: 1px;
@@ -104,6 +128,12 @@
     }
     .top-post > p:hover{
         cursor: pointer;
+    }
+    button{
+        background-color: transparent;
+        box-shadow: 0;
+        border: none;
+        z-index: 1;
     }
     .top-profile{
         display: flex;

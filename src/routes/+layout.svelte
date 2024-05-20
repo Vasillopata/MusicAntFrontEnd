@@ -6,7 +6,7 @@
     import { writable } from 'svelte/store';
     import {isLoggedIn, logout} from '$lib/handlers/UserHandler'
     import {currentSearchQuery} from '$lib/stores/searchQuery'
-    
+    import Loading from './Loading.svelte'
     
     let searchBarInput = ''
     let searchBarElement: HTMLInputElement|undefined = undefined
@@ -30,7 +30,7 @@
 </script>
 
 
-
+<div class="mobile"><Loading/></div>
 <div class="app">
     <div class="top-nav">
         <div class="logo">
@@ -301,5 +301,21 @@
     * {
         box-sizing: border-box;
         min-width: 0;
+    }
+    .mobile{
+        display: none;
+    }
+    @media (pointer: coarse){
+        .mobile{
+            height: 100vh   ;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--darkest);
+        }
+        .app{
+            display: none;
+        }
     }
 </style>

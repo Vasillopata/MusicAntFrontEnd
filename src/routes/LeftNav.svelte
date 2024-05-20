@@ -56,7 +56,7 @@
                     <div class="top-profile"><img src="/images/papi.png" alt=""></div>
                     <span>RockEnjoyer123</span>
                 </a>    
-                <a href="/account">
+                <a href="/account/1">
                     <div class="top-profile"><img src="/images/ale.jpg" alt=""></div>
                     <span>Dr music</span>
                 </a>                  

@@ -36,15 +36,14 @@
         <p>Jon Doe</p>
     </div>
     <div class="post-title">
-        tower of pisa
+        METALICA!!!!!!!!!!!
     </div>
     <div class="mid-post">
         <img class="fg-image" src={imgURL} alt="">
         <img class="bg-image" src={imgURL} alt="">
     </div>
     <div class="post-txt">
-        The Leaning Tower of Pisa, an architectural marvel nestled in the heart of Italy, stands as a testament to both human ingenuity and the whims of physics. Its iconic tilt, caused by unstable ground during its construction in the 12th century, has captivated visitors for centuries.
-        As you gaze upon its elegant white marble facade, you can't help but marvel at its lean, a result of both its unintended deviation from the vertical and the careful engineering feats that have kept it standing for generations.
+        Създадена е през 1981 година от 18-годишния Джеймс Хетфийлд и 17-годишния датски тенисист и хоби-барабанист Ларс Улрих, който се преместил със семейството си от Копенхаген в Калифорния. След две години присъствие на ъндърграунд сцената и няколко демо записа, идва 1983 година, когато музикантите издават първия си студиен албум „Kill 'Em All“. С него Metallica популяризират траш метъла, като този албум през това време се е смятал за най-тежката музика, издавана някога. 
     </div>
     <div class="bot-post">
         <LikeButton/>

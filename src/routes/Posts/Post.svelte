@@ -17,7 +17,7 @@
         <p>Jon Doe</p>
     </div>
     <div class="post-title">
-        Nature
+        Lovely qeen
     </div>
     <a href="/PostPage">
         <div class="mid-post">

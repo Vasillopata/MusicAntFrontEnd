@@ -42,7 +42,7 @@
         </label>
             <input bind:value={imageUrl} id="image" type="file" name="image" accept="image/*" style="display: none;" on:change={async(e)=> {handleFileUpload(e,'pfp')}} />
         <div class="username-p">
-            <p>Profile Name</p>
+            <p>Jon Doe</p>
             <i class='bx bx-edit'></i>
         </div>
     </div>
@@ -65,7 +65,7 @@
 
     {#if selectedWindow == 'MyPosts'}
         <div class="post-wraper">
-            <Post imgURL={'/images/monstro.jpg'}/>
+            <Post imgURL={'/0x0.jpeg'}/>
             <Post imgURL={'/images/niggawebp.webp'}/>
             <Post imgURL={'/images/OIG.png'}/>
             <Post imgURL={'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg'}/>

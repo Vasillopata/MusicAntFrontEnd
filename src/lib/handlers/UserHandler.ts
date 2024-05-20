@@ -12,6 +12,7 @@ export interface User{
 }
 
 
+
 export async function getToken() {
     let cookie;
     if (browser) {
@@ -71,6 +72,23 @@ export async function login(event: Event,email: string, password: string) {
     } else {
         console.error("Login failed: ", data.message);
     }
+}
+export async function getUserNameById(userId: number){
+    let token = await getToken();
+    const response = await fetch(`https://localhost:5000/account/getUserNameById?userId=${userId}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        console.log(response);
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.text();
+    return data;
 }
 export async function register(event: Event, email: string,userName: string, password: string, birthDate: Date) {
     event.preventDefault();

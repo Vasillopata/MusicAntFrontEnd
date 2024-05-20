@@ -7,7 +7,7 @@
 </script>
 
 <div class= "feed">
-    <PostImgTxt imgURL={'https://cdn.britannica.com/51/94351-050-86B70FE1/Leaning-Tower-of-Pisa-Italy.jpg'}/>
+    <PostImgTxt imgURL={'ab67706c0000da8481d620645973fe11fe5b2782.jpeg'}/>
     <PostTxt/>
     <Post imgURL={'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg'}/>
     <Post imgURL={'/images/papi2.jpg'}/>
