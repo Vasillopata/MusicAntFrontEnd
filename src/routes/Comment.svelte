@@ -18,14 +18,11 @@
         Japanese nature is a breathtaking tapestry woven with delicate cherry blossoms, majestic mountains, tranquil bamboo forests, and serene Zen gardens. Each element harmonizes with the others to create a landscape that is both awe-inspiring and deeply calming. Whether you're exploring the vibrant streets of Tokyo or hiking through the misty forests of Nikko, Japan's natural beauty will leave you spellbound.
     </p>
     <div class="bottom-comment">
-        <div>
-            <LikeButton/>
-        </div>
         <textarea class="parent-comment" name="parent-comment" id="" bind:value={parentcomment}></textarea>
         <div>
             <div class="clear-button">
                 {#if parentcomment != ''}
-                    <button on:click={()=>{parentcomment = "";searchBarElement?.focus()}} transition:slide={{duration:300}}><i class='bx bx-message-square-x' ></i></button>
+                    <button on:click={()=>{parentcomment = "";}} transition:slide={{duration:300}}><i class='bx bx-message-square-x' ></i></button>
                 {/if} 
             </div>
         </div>

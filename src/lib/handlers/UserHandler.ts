@@ -5,8 +5,8 @@ export interface User{
     id: number;
     userName: string;
     email: string;
-    pfpUrl: string;
-    bannerUrl: string;
+    pfp: string;
+    banner: string;
     createdDate: string;
     birthDate: string;
 }

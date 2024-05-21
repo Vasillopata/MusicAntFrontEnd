@@ -26,10 +26,8 @@
         </div>
     </a>
     <div class="bot-post">
-        <LikeButton/>
         <a href="/PostPage"><i class='bx bx-message-square'></i></a>
         <div style="margin-left: auto;">
-        <SaveButton/>
         </div>
     </div>
 </div>

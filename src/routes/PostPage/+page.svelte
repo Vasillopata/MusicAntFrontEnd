@@ -14,7 +14,7 @@
     <div class="parent-comment-buttons">
         <button class="coment-button" style="{parentcomment!='' ? 'color:var(--blue)' :''}">Коментирай</button>
         {#if parentcomment != ''}
-            <button on:click={()=>{parentcomment = "";searchBarElement?.focus()}} transition:slide={{duration:400}} class="search-bar-clear"><i class='bx bx-message-square-x' ></i></button>
+            <button on:click={()=>{parentcomment = "";}} transition:slide={{duration:400}} class="search-bar-clear"><i class='bx bx-message-square-x' ></i></button>
         {/if}
     </div>
     <textarea class="parent-comment" name="parent-comment" id="" bind:value={parentcomment}></textarea>

@@ -1,10 +1,26 @@
 <script lang="ts">
-    import { browser } from "$app/environment";
+    import { browser } from "$app/environment"
+    import {savePost, unsavePost, checkIfSaved} from "$lib/handlers/PostHandler"
+    import {onMount} from "svelte"
 
+    export let postId:number; 
     let saved = false
+    
+    async function handleClick(){
+        if (saved){
+            saved = false;
+            await unsavePost(postId);
+        }else{
+            saved = true;
+            await savePost(postId);
+        }
+    }
+    onMount(async ()=>{
+        saved = await checkIfSaved(postId);
+    })
 </script>
 
-<button id='temp' on:click={()=>{saved = !saved}} class:like-active={saved}><i class='bx {saved ? 'bxs-bookmark' : 'bx-bookmark'}' ></i></button>
+<button id='temp' on:click={async()=> await handleClick()} class:like-active={saved}><i class='bx {saved ? 'bxs-bookmark' : 'bx-bookmark'}' ></i></button>
 
 <style>
 

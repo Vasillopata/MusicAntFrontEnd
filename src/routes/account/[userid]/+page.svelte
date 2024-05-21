@@ -2,7 +2,7 @@
     import { quintOut } from "svelte/easing";
     import { fade, slide } from "svelte/transition";
     import PostReal from "../../Posts/PostReal.svelte";
-    import {getPosts} from "$lib/handlers/PostHandler";
+    import {getPostsByUser} from "$lib/handlers/PostHandler";
     import { page } from "$app/stores";
     import { onMount } from "svelte";
     import { getUserNameById } from "$lib/handlers/UserHandler";
@@ -13,42 +13,46 @@
     let userId: number
     let userName: string
 
-
+    let ready = false
     onMount(async()=>{
-        userId = Number($page.params.userid)
-        posts = await getPosts(userId, 1, 5, 0)
-        userName = await getUserNameById(userId)
+        ready = false;
+        userId = Number($page.params.userid);
+        posts = await getPostsByUser(userId, 1, 5);
+        userName = await getUserNameById(userId);
+        ready = true;
     })
 </script>
-<div class="account-page">
-    <div class="account-background">
-        <img src="https://thumbs.dreamstime.com/b/panoramic-autumn-landscape-wooden-path-fall-nature-backgro-sunset-background-97979511.jpg" alt="">    
-    </div>
-    <div class="account-img">
-            <img src="/images/ale.jpg" alt="">
-            <p>{userName}</p>
-        <div class="account-buttons">
-            <button>
-                Съобщени
-            </button>
-            {#if isFan}
-                <button on:click={()=>{bellRing = !bellRing}} transition:slide={{duration:300, axis:"x", easing: quintOut}} class="bell">
-                    <i class='{bellRing ? "bx bx-bell" : "bx bx-bell-off" }'></i>
+
+
+{#if ready}
+    <div class="account-page">
+        <div class="account-background">
+            <img src="https://thumbs.dreamstime.com/b/panoramic-autumn-landscape-wooden-path-fall-nature-backgro-sunset-background-97979511.jpg" alt="">    
+        </div>
+        <div class="account-img">
+                <img src="/images/ale.jpg" alt="">
+                <p>{userName}</p>
+            <div class="account-buttons">
+                {#if isFan}
+                    <button on:click={()=>{bellRing = !bellRing}} transition:slide={{duration:300, axis:"x", easing: quintOut}} class="bell">
+                        <i class='{bellRing ? "bx bx-bell" : "bx bx-bell-off" }'></i>
+                    </button>
+                {/if}
+                <button style="width:{isFan ? "7.5rem" : "6.5rem"}" class:is-fan={isFan} on:click={()=>{isFan = !isFan}}>
+                    {isFan ? "Вече си фен" : "Стани фен"}
                 </button>
-            {/if}
-            <button style="width:{isFan ? "7.5rem" : "6.5rem"}" class:is-fan={isFan} on:click={()=>{isFan = !isFan}}>
-                {isFan ? "Вече си фен" : "Стани фен"}
-            </button>
+            </div>
+        </div>
+        <div style="display: flex; flex-direction:row; justify-content:space-between">
+            <div class="post-list">
+                {#each posts as id}
+                    <PostReal postId={id}/> 
+                {/each}
+            </div>
         </div>
     </div>
-    <div style="display: flex; flex-direction:row; justify-content:space-between">
-        <div class="post-list">
-            {#each posts as id}
-                <PostReal postId={id}/> 
-            {/each}
-        </div>
-    </div>
-</div>
+{/if}
+
 
 <style>
     .post-list{

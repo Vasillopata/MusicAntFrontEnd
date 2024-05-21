@@ -1,13 +1,26 @@
 <script lang="ts">
     import { browser } from "$app/environment";
+    import {checkIfLiked, likePost, unlikePost} from "$lib/handlers/PostHandler";
+    import {onMount} from "svelte";
 
-    //export const postId:number; !!!!!!!!!!!!!!
+    export let postId:number; 
     let liked = false
     
-
+    async function handleClick(){
+        if (liked){
+            liked = false;
+            await unlikePost(postId);
+        }else{
+            liked = true;
+            await likePost(postId);
+        }
+    }
+    onMount(async ()=>{
+        liked = await checkIfLiked(postId);
+    })
 </script>
 
-<button id='temp' on:click={()=>{liked = !liked}} class:like-active={liked}><i class='bx {liked ? 'bxs-heart' : 'bx-heart'}' ></i></button>
+<button id='temp' on:click={async()=> await handleClick()} class:like-active={liked}><i class='bx {liked ? 'bxs-heart' : 'bx-heart'}' ></i></button>
 
 <style>
 

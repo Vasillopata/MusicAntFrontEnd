@@ -5,26 +5,40 @@
     import { slide } from 'svelte/transition';
     import type { Post } from '$lib/handlers/PostHandler';
     import type { Community } from '$lib/handlers/CommunityHandler';
+    import AccountLink from "../AccountLink.svelte";
+    import PostLink from "../PostLink.svelte";
 
     let ready = false
 
+    let data:any = undefined;
     let friends: User[] = []
     let profiles: User[] = []
     let posts: Post[] = []
+    let postImgs: string[] = []
     let communities: Community[] = []
+
     let friendsOpened = false
     let profilesOpened = false
     let postsOpened = false
     let communitiesOpened = false
 
-
+    async function handleSearch(){
+        ready = false;
+        data = await search();
+        friends = data.friends;
+        profiles = data.profiles;
+        posts = data.posts;
+        postImgs = data.postImgs;
+        communities = data.communities;
+        ready = true;
+    }
+    $:{
+        if ($currentSearchQuery){
+            handleSearch();
+        }
+    }
     onMount(async () => {
-        let data:any = await search()
-        friends = data.friends
-        profiles = data.profiles
-        posts = data.posts
-        communities = data.communities
-        ready = true
+        handleSearch();
     }) 
 </script>
 
@@ -43,9 +57,7 @@
         {#if profilesOpened}
             <div class="dropdown-body"transition:slide>
                 {#each profiles as profile}
-                    <div>
-                        <h1>{profile.userName}</h1>
-                    </div>
+                    <AccountLink username="{profile.userName}" id={profile.id} image="a"/>           
                 {/each}
             </div>
         {/if}
@@ -54,7 +66,9 @@
         <button on:click={()=>{postsOpened = !postsOpened}}>Публикации</button>
         {#if postsOpened}
             <div class="dropdown-body"transition:slide>
-                a
+                {#each posts as post, index}
+                    <PostLink title={post.title} image={postImgs[index]} id={post.id}/>
+                {/each}
             </div>
         {/if}
     </div>

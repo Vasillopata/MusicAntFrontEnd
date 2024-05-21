@@ -2,16 +2,20 @@
     import { browser } from "$app/environment";
     import LikeButton from "../LikeButton.svelte";
     import SaveButton from "../SaveButton.svelte";
-    import {getPostById, getPostImg} from "$lib/handlers/PostHandler";
+    import {getPostById} from "$lib/handlers/PostHandler";
     import type {Post} from "$lib/handlers/PostHandler";
     import { onMount } from "svelte";
+    import {getUserNameById} from "$lib/handlers/UserHandler";
+
+
     export let postId: number  
+
     
     let post: Post|undefined = undefined
-    let imgURL: string
+    let username: string = ""
     onMount(async ()=>{
-        imgURL = await getPostImg(postId);
         post = await getPostById(postId);
+        username = await getUserNameById(post.userId);
     })
 </script>
 
@@ -21,22 +25,22 @@
         <div class="top-profile">
             <img src="/images/ale.jpg" alt="">
         </div>
-        <p>Jon Doe</p>
+        <p>{username}</p>
     </div>
     <div class="post-title">
         {post?.title}
     </div>
     <a href="/PostPage">
         <div class="mid-post">
-            <img class="fg-image" src={imgURL} alt="">
-            <img class="bg-image" src={imgURL} alt="">
+            <img class="fg-image" src={post?.image} alt="">
+            <img class="bg-image" src={post?.image} alt="">
         </div>
     </a>
     <div class="bot-post">
-        <LikeButton/>
+        <LikeButton {postId}/>
         <a href="/PostPage"><i class='bx bx-message-square'></i></a>
         <div style="margin-left: auto;">
-        <SaveButton/>
+        <SaveButton {postId}/>
         </div>
     </div>
 </div>

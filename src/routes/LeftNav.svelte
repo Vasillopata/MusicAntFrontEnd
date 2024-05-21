@@ -2,6 +2,7 @@
   import { slide } from "svelte/transition";
   import AddComunity from "./AddComunity.svelte";
   import { logout } from "$lib/handlers/UserHandler";
+  import AccountLink from "./AccountLink.svelte";
 
     let addcommunity = false
     
@@ -48,26 +49,8 @@
         </a>
         {#if fansOpened}
             <div transition:slide class="dropdown">
-                <a href="/">
-                    <div class="top-profile"><img src="/images/account.png" alt=""></div>
-                    <span>Vasil Petrov</span>
-                </a>
-                <a href="/">
-                    <div class="top-profile"><img src="/images/papi.png" alt=""></div>
-                    <span>RockEnjoyer123</span>
-                </a>    
-                <a href="/account/1">
-                    <div class="top-profile"><img src="/images/ale.jpg" alt=""></div>
-                    <span>Dr music</span>
-                </a>                  
-                <a href="/">
-                    <div class="top-profile"><img src="/images/advokad.png" alt=""></div>
-                    <span>Ivan Petrov</span>
-                </a>     
-                <a href="/">
-                    <div class="top-profile"><img src="/images/account.png" alt=""></div>
-                    <span>Account</span>
-                </a>               
+                <AccountLink username="vasil" id={1} />  
+                <AccountLink username="vasil" id={1} image="a"/>         
             </div>
         {/if}
         <a href="/" on:click={(e)=>{toggleCategory(e,'genre')}} class="side-button" class:side-button-opened={genreOpened}>
@@ -81,22 +64,6 @@
                     <div class="top-profile-community"><img src="/images/account.png" alt=""></div>
                     <span>community</span>
                 </a>
-                <a href="/">
-                    <div class="top-profile-community"><img src="/images/account.png" alt=""></div>
-                    <span>community</span>
-                </a>    
-                <a href="/account">
-                    <div class="top-profile-community"><img src="/images/account.png" alt=""></div>
-                    <span>community</span>
-                </a>                  
-                <a href="/">
-                    <div class="top-profile-community"><img src="/images/account.png" alt=""></div>
-                    <span>community</span>
-                </a>     
-                <a href="/">
-                    <div class="top-profile-community"><img src="/images/account.png" alt=""></div>
-                    <span>community</span>
-                </a>               
             </div>
         {/if}
         <a href="/" on:click={(e)=>{toggleCategory(e,'resources')}} class="side-button" class:side-button-opened={resourcesOpened}>

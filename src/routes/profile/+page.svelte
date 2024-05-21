@@ -1,10 +1,19 @@
 <script lang="ts">
     import Post from "../Posts/Post.svelte"
     import Comment from "../Comment.svelte";
+    import { onMount } from "svelte";
+    import { getPostsByUser } from "$lib/handlers/PostHandler";
+    import type { User } from "$lib/handlers/UserHandler";
+    import { getOwnAccount } from "$lib/handlers/AccountHandler";
+    import PostReal from "../Posts/PostReal.svelte";
+
+
+    let ready = false;
     let imageUrl = ''
     let imageUrlBackground = ''
     let selectedWindow = 'MyPosts'
-    
+    let profile: User = {id: 0, userName: '', email: '', pfp: '', banner: '', createdDate:'', birthDate: ''};
+    let posts: number[] = []
 
     async function handleFileUpload(event: Event, field: string) {
         const file = (event.target as HTMLInputElement)?.files?.[0];
@@ -20,8 +29,17 @@
         }
     }
     
+    
+    onMount(async()=>{
+        ready = false;
+        profile = await getOwnAccount();
+        posts = await getPostsByUser(profile.id, 1, 5);
+        ready = true;
+    })
 </script>
 
+
+{#if ready}
 <div class="main">
     <label for="imageBg" class="custom-file-input" style="background-image: url({imageUrlBackground!=null ? imageUrlBackground : ""}); ">
         {#if imageUrlBackground}
@@ -42,22 +60,22 @@
         </label>
             <input bind:value={imageUrl} id="image" type="file" name="image" accept="image/*" style="display: none;" on:change={async(e)=> {handleFileUpload(e,'pfp')}} />
         <div class="username-p">
-            <p>Jon Doe</p>
+            <p>{profile.userName}</p>
             <i class='bx bx-edit'></i>
         </div>
     </div>
 
     <div class="profile-buttons">
-        <button on:click={()=>selectedWindow = 'MyPosts'}>
+        <button on:click={async()=>{selectedWindow = 'MyPosts'; posts = await getPostsByUser(profile.id, 1, 5)}}>
             Мои постове
         </button>
-        <button on:click={()=> selectedWindow = 'MyComments'}>
+        <button on:click={()=>{selectedWindow = 'MyComments'; posts = []}}>
             Мои коментари
         </button>
-        <button on:click={()=> selectedWindow = 'SavedPosts'}>
+        <button on:click={()=>{selectedWindow = 'SavedPosts'; posts = []}}>
             Запазени
         </button>
-        <button on:click={()=> selectedWindow = 'LikedPosts'}>
+        <button on:click={()=>{selectedWindow = 'LikedPosts'; posts = []}}>
             Харесани
         </button>
     </div>
@@ -65,49 +83,28 @@
 
     {#if selectedWindow == 'MyPosts'}
         <div class="post-wraper">
-            <Post imgURL={'/0x0.jpeg'}/>
-            <Post imgURL={'/images/niggawebp.webp'}/>
-            <Post imgURL={'/images/OIG.png'}/>
-            <Post imgURL={'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg'}/>
-            <Post imgURL={'/images/papi2.jpg'}/>
-            <Post imgURL={'/images/papi1.jpg'}/>
-            <Post imgURL={'/images/papi.png'}/>
+            {#each posts as postId }
+                <PostReal {postId} />
+            {/each}
         </div>
     {/if}
     {#if selectedWindow == 'MyComments'}
         <div class="post-wraper">
-            <Comment/>
-            <Comment/>
-            <Comment/>
-            <Comment/>
-            <Comment/>
-            <Comment/>
+            
         </div>
     {/if}
     {#if selectedWindow == 'SavedPosts'}
         <div class="post-wraper">
-            <Post imgURL={'/images/monstro.jpg'}/>
-            <Post imgURL={'/images/niggawebp.webp'}/>
-            <Post imgURL={'/images/OIG.png'}/>
-            <Post imgURL={'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg'}/>
-            <Post imgURL={'/images/papi2.jpg'}/>
-            <Post imgURL={'/images/papi1.jpg'}/>
-            <Post imgURL={'/images/papi.png'}/>
+            
         </div>
     {/if}
     {#if selectedWindow == 'LikedPosts'}
         <div class="post-wraper">
-            <Post imgURL={'/images/monstro.jpg'}/>
-            <Post imgURL={'/images/niggawebp.webp'}/>
-            <Post imgURL={'/images/OIG.png'}/>
-            <Post imgURL={'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg'}/>
-            <Post imgURL={'/images/papi2.jpg'}/>
-            <Post imgURL={'/images/papi1.jpg'}/>
-            <Post imgURL={'/images/papi.png'}/>
+            
         </div>
     {/if}
 </div>
-
+{/if}
 
 
 

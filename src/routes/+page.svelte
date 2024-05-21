@@ -3,16 +3,26 @@
     import PostImgTxt from "./Posts/PostImgTxt.svelte";
     import { page } from "$app/stores";
     import PostTxt from "./Posts/PostTxt.svelte";
+    import { getPostsOnFeed } from "$lib/handlers/PostHandler";
+    import { onMount } from "svelte";
+    import PostReal from "./Posts/PostReal.svelte";
     console.log($page.url.pathname)
+
+    let ready = false;
+    let posts: number[] = []
+
+    onMount(async()=>{
+        ready = false;
+        posts = await getPostsOnFeed();
+        console.log(posts)
+        ready = true;
+    })
 </script>
 
 <div class= "feed">
-    <PostImgTxt imgURL={'ab67706c0000da8481d620645973fe11fe5b2782.jpeg'}/>
-    <PostTxt/>
-    <Post imgURL={'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg'}/>
-    <Post imgURL={'/images/papi2.jpg'}/>
-    <Post imgURL={'/images/papi1.jpg'}/>
-    <Post imgURL={'/images/papi.png'}/>
+    {#each posts as postId }
+        <PostReal {postId}/>
+    {/each}
 </div>
 
 <style>

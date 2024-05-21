@@ -5,7 +5,6 @@ import { writable } from "svelte/store";
 export let currentSearchQuery = writable<string>('');
 
 export async function search() {
-    
     let query:string = '';
     currentSearchQuery.subscribe(value => {
         query = value;
@@ -18,7 +17,6 @@ export async function search() {
             'Authorization': `Bearer ${token}`
         }
     });
-    console.log("asdasd");
 
     if (!response.ok) {
         console.log(response);

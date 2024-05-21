@@ -7,25 +7,31 @@
     import {isLoggedIn, logout} from '$lib/handlers/UserHandler'
     import {currentSearchQuery} from '$lib/stores/searchQuery'
     import Loading from './Loading.svelte'
-    
-    let searchBarInput = ''
-    let searchBarElement: HTMLInputElement|undefined = undefined
+    import { goto } from '$app/navigation';
+    import { scrollY } from '$lib/store';
+    import { browser } from '$app/environment';
+
+    let searchBarInput = '';
+    let searchBarElement: HTMLInputElement|undefined = undefined;
+
 
     let website: HTMLDivElement;
-    let loggedIn = false
-    import { scrollY } from '$lib/store'
-    import { goto } from '$app/navigation';
-
+    let loggedIn: boolean;
+    
+    
     onMount(async() => {
-        loggedIn = await isLoggedIn()
+        loggedIn = await isLoggedIn();
+        if(!loggedIn){
+            goto('/login')
+        }
         await website.addEventListener('scroll', () => {
             scrollY.set(website.scrollTop);
         });
     });
     async function handleSearch(){
-        await currentSearchQuery.set(searchBarInput)
-        searchBarInput = ''
-        goto('/search')
+        await currentSearchQuery.set(searchBarInput);
+        searchBarInput = '';
+        goto('/search');
     }
 </script>
 
@@ -66,7 +72,9 @@
         {/if}
     </div>
     <div class="website-wrap-wrap">
-        <LeftNav/>
+        {#if loggedIn}
+            <LeftNav/>
+        {/if}
         <div class="website-wrap" bind:this={website}>
             <main>
                 <slot/>
