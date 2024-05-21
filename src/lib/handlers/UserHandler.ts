@@ -74,6 +74,7 @@ export async function login(event: Event,email: string, password: string) {
         console.error("Login failed: ", data.message);
     }
 }
+
 export async function getUserNameById(userId: number){
     let token = await getToken();
     const response = await fetch(`${url}/account/getUserNameById?userId=${userId}`, {
