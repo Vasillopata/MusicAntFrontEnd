@@ -15,6 +15,9 @@
     let username: string = ""
     onMount(async ()=>{
         post = await getPostById(postId);
+        if(post.image == null){
+            console.log("no image")
+        }
         username = await getUserNameById(post.userId);
     })
 </script>
@@ -30,15 +33,20 @@
     <div class="post-title">
         {post?.title}
     </div>
-    <a href="/PostPage">
-        <div class="mid-post">
-            <img class="fg-image" src={post?.image} alt="">
-            <img class="bg-image" src={post?.image} alt="">
-        </div>
+    <a href="/post/{postId}">
+        {#if post?.image}
+            <div class="mid-post">
+                <img class="fg-image" src={post?.image} alt="">
+                <img class="bg-image" src={post?.image} alt="">
+            </div> 
+        {/if}
+        {#if post?.text}
+            <p>{post?.text}</p>
+        {/if}
     </a>
     <div class="bot-post">
         <LikeButton {postId}/>
-        <a href="/PostPage"><i class='bx bx-message-square'></i></a>
+        <a href="/post/{post?.id}"><i class='bx bx-message-square'></i></a>
         <div style="margin-left: auto;">
         <SaveButton {postId}/>
         </div>

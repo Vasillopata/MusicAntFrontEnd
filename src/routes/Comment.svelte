@@ -2,31 +2,35 @@
     import { slide } from "svelte/transition";
     import LikeButton from "./LikeButton.svelte";
     import SaveButton from "./SaveButton.svelte";
+    import { onMount } from "svelte";
+    import type {Comment} from "$lib/handlers/PostHandler";
 
-    let parentcomment = ''
-    let searchBarElement: HTMLInputElement|undefined = undefined
+    export let comment: Comment;
+    export let repliesCount: number;
+
+    let parentcomment = '';
+    let searchBarElement: HTMLInputElement|undefined = undefined;
+
+    onMount(async()=>{
+
+    })
 </script>
 <hr>
 <div class="comentator">
     <div class="profile-pick">
         <img src="/images/ale.jpg" alt="">
     </div>
-    <p>Jon Doe</p>
+    <p>{comment.user.userName}</p>
 </div>
 <div class="comment">
-    <p>
-        Japanese nature is a breathtaking tapestry woven with delicate cherry blossoms, majestic mountains, tranquil bamboo forests, and serene Zen gardens. Each element harmonizes with the others to create a landscape that is both awe-inspiring and deeply calming. Whether you're exploring the vibrant streets of Tokyo or hiking through the misty forests of Nikko, Japan's natural beauty will leave you spellbound.
-    </p>
+    <p>{comment.text}</p>
     <div class="bottom-comment">
-        <textarea class="parent-comment" name="parent-comment" id="" bind:value={parentcomment}></textarea>
-        <div>
-            <div class="clear-button">
-                {#if parentcomment != ''}
-                    <button on:click={()=>{parentcomment = "";}} transition:slide={{duration:300}}><i class='bx bx-message-square-x' ></i></button>
-                {/if} 
-            </div>
+        <a href="/comment/{comment.id}">{repliesCount}</a>
+        <div class="clear-button">
+            {#if parentcomment != ''}
+                <button on:click={()=>{parentcomment = "";}} transition:slide={{duration:300}}><i class='bx bx-message-square-x' ></i></button>
+            {/if} 
         </div>
-        
         <div style="margin-left: auto;">
             <button>
                 <i class='bx bx-right-arrow'></i>

@@ -6,7 +6,6 @@
     import { getPostsOnFeed } from "$lib/handlers/PostHandler";
     import { onMount } from "svelte";
     import PostReal from "./Posts/PostReal.svelte";
-    console.log($page.url.pathname)
 
     let ready = false;
     let posts: number[] = []
@@ -14,7 +13,6 @@
     onMount(async()=>{
         ready = false;
         posts = await getPostsOnFeed();
-        console.log(posts)
         ready = true;
     })
 </script>

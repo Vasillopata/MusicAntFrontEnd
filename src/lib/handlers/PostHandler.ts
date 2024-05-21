@@ -1,9 +1,10 @@
 import { url } from "$lib/url";
-import { getToken } from "./UserHandler";
+import { getToken, type User } from "./UserHandler";
 
 export interface Comment {
     id: number;
     userId: number;
+    user: User;
     postId: number;
     text: string;
     parentCommentId: number|null;
@@ -85,7 +86,7 @@ export async function getPostById(postId: number){
     const data = await response.json();
     console.log(data);
     let post: Post = {
-        image: `data:image/jpeg;base64,${data.image}`,
+        image: null,
         id: data.id,
         title: data.title,
         text: data.text,
@@ -93,6 +94,9 @@ export async function getPostById(postId: number){
         communityId: data.communityId,
         datePosted: data.datePosted
     };
+    if (data.image) {
+        post.image = `data:image/jpeg;base64,${data.image}`;
+    }
     return post;
 }   
 
@@ -232,7 +236,7 @@ export async function unsavePost(postId: number){
     return;
 }
 
-export async function comment(postId: number, text: string, parentCommentId: number|null){
+export async function comment(postId: number|null, text: string, parentCommentId: number|null){
     let token = await getToken();
     const model = {
         PostId: postId,
@@ -313,6 +317,63 @@ export async function checkIfSaved(postId: number){
     } else {
         return false;
     }
+}
+
+export async function getCommentsByPost(postId: number){
+    let token = await getToken();
+    const response = await fetch(`${url}/post/getCommentsByPost?postId=${postId}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        console.log(response);
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    const comments: Comment[] = data.comments;
+    const repliesPerComment: number[] = data.repliesPerComment;
+    return {comments, repliesPerComment};
+}
+
+export async function getRepliesByComment(commentId: number){
+    let token = await getToken();
+    const response = await fetch(`${url}/post/getRepliesByComment?commentId=${commentId}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        console.log(response);
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    const replies: Comment[] = data.replies;
+    const repliesPerReply: number[] = data.repliesPerReply;
+    return {replies, repliesPerReply};
+}
+
+export async function getCommentById(commentId: number){
+    let token = await getToken();
+    const response = await fetch(`${url}/post/getCommentById?commentId=${commentId}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        console.log(response);
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    const comment: Comment = data.comment;
+    const repliesCount: number = data.repliesCount;
+    return {comment, repliesCount};
 }
 
 

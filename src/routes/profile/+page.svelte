@@ -6,6 +6,7 @@
     import type { User } from "$lib/handlers/UserHandler";
     import { getOwnAccount } from "$lib/handlers/AccountHandler";
     import PostReal from "../Posts/PostReal.svelte";
+    import {deletePost} from "$lib/handlers/PostHandler";
 
 
     let ready = false;
@@ -29,7 +30,10 @@
         }
     }
     
-    
+    async function handledeletePost(postId: number){
+        await deletePost(postId);
+        posts = [...posts.filter((id)=> id != postId)];
+    }
     onMount(async()=>{
         ready = false;
         profile = await getOwnAccount();
@@ -83,8 +87,11 @@
 
     {#if selectedWindow == 'MyPosts'}
         <div class="post-wraper">
-            {#each posts as postId }
-                <PostReal {postId} />
+            {#each posts as postId} 
+                <div style="position: relative">
+                    <button class="delete-button" on:click={async()=>{await handledeletePost(postId)}}><i class='bx bxs-trash' ></i></button>
+                    <PostReal {postId} />
+                </div>
             {/each}
         </div>
     {/if}
@@ -103,12 +110,26 @@
             
         </div>
     {/if}
+    
 </div>
 {/if}
 
 
 
 <style>
+    .delete-button{
+        position: absolute;
+        top: 1rem;
+        right: -4rem;   
+        background-color: var(--darkest);
+        font-size: 1.3rem;
+        outline: none;
+        border: none;
+        height: 4rem;
+        border-radius: 1.5rem;
+        color: whitesmoke;
+        width: 4rem;
+    }
     .post-wraper{
         display: flex;
         flex-direction: column;

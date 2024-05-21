@@ -21,6 +21,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"cropperjs": "^1.6.2",
 		"croppie": "^2.6.5",
 		"svelte-autosize": "^1.1.0"
 	}

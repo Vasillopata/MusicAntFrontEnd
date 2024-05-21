@@ -52,7 +52,16 @@
     })
 
     async function handlePost() {
-        let img = await fetch(imageUrl).then(res => res.blob());
+        let img = null;
+        let text = null;
+        if(selectedPostType == 'img'){
+            img = await fetch(imageUrl).then(res => res.blob());
+        }else if(selectedPostType == 'imgtxt'){
+            img = await fetch(imageUrl).then(res => res.blob());
+            text = textInput;
+        }else if(selectedPostType == 'txt'){
+            text = textInput;
+        }
         let id = await createPost(titleInput, textInput, img, null)
         await goto(`/post/${id}`)
     }
@@ -61,13 +70,13 @@
 
 <div class="create-post-area">
     <div class="type-of-post">
-    <button on:click={()=>selectedPostType = "img"}>
+    <button on:click={()=>{selectedPostType = "img";}}>
         <i class='bx bx-image-alt'></i> снимка
     </button>
-    <button on:click={()=>selectedPostType = "imgtxt"}>
+    <button on:click={()=>{selectedPostType = "imgtxt"}}>
         <i class='bx bx-edit' ></i>снимка с текст
     </button>
-    <button on:click={()=>selectedPostType = "txt"}>
+    <button on:click={()=>{selectedPostType = "txt"}}>
         <i class='bx bx-text' ></i>текст
     </button>
     </div>
