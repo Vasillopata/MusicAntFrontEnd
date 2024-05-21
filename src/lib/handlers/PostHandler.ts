@@ -1,3 +1,4 @@
+import { url } from "$lib/url";
 import { getToken } from "./UserHandler";
 
 export interface Comment {
@@ -31,7 +32,7 @@ export async function createPost(title: string, text: string|null, image: Blob|n
         formData.append('CommunityId', communityId.toString());
     }
 
-    const response = await fetch('https://localhost:5000/post/createPost', {
+    const response = await fetch(`${url}/post/createPost`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -50,7 +51,7 @@ export async function createPost(title: string, text: string|null, image: Blob|n
 
 export async function getPostImg(postId: number){
     let token = await getToken();
-    const response = await fetch(`https://localhost:5000/post/getPostImg?postId=${postId}`, {
+    const response = await fetch(`${url}/post/getPostImg?postId=${postId}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -69,7 +70,7 @@ export async function getPostImg(postId: number){
 
 export async function getPostById(postId: number){
     let token = await getToken();
-    const response = await fetch(`https://localhost:5000/post/getPostById?postId=${postId}`, {
+    const response = await fetch(`${url}/post/getPostById?postId=${postId}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -97,7 +98,7 @@ export async function getPostById(postId: number){
 
 export async function getPostsByUser(userId: number, initPost: number, amount: number){
     let token = await getToken();
-    const response = await fetch(`https://localhost:5000/post/getPostsByUser?userId=${userId}&initPost=${initPost}&amount=${amount}`, {
+    const response = await fetch(`${url}/post/getPostsByUser?userId=${userId}&initPost=${initPost}&amount=${amount}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -116,7 +117,7 @@ export async function getPostsByUser(userId: number, initPost: number, amount: n
 
 export async function getPostsByCommunity(communityId: number, initPost: number, amount: number){
     let token = await getToken();
-    const response = await fetch(`https://localhost:5000/post/getPostsByCommunity?communityId=${communityId}&initPost=${initPost}&amount=${amount}`, {
+    const response = await fetch(`${url}/post/getPostsByCommunity?communityId=${communityId}&initPost=${initPost}&amount=${amount}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -134,7 +135,7 @@ export async function getPostsByCommunity(communityId: number, initPost: number,
 }
 export async function getPostsOnFeed(){
     let token = await getToken();
-    const response = await fetch(`https://localhost:5000/post/getPostsOnFeed`, {
+    const response = await fetch(`${url}/post/getPostsOnFeed`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -153,7 +154,7 @@ export async function getPostsOnFeed(){
 
 export async function likePost(postId: number){
     let token = await getToken();
-    const response = await fetch(`https://localhost:5000/post/likePost?postId=${postId}`, {
+    const response = await fetch(`${url}/post/likePost?postId=${postId}`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -169,7 +170,7 @@ export async function likePost(postId: number){
 
 export async function unlikePost(postId: number){    
     let token = await getToken();
-    const response = await fetch(`https://localhost:5000/post/unlikePost?postId=${postId}`, {
+    const response = await fetch(`${url}/post/unlikePost?postId=${postId}`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -185,7 +186,7 @@ export async function unlikePost(postId: number){
 
 export async function deletePost(postId: number){
     let token = await getToken();
-    const response = await fetch(`https://localhost:5000/post/deletePost?postId=${postId}`, {
+    const response = await fetch(`${url}/post/deletePost?postId=${postId}`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -201,7 +202,7 @@ export async function deletePost(postId: number){
 
 export async function savePost(postId: number){
     let token = await getToken();
-    const response = await fetch(`https://localhost:5000/post/savePost?postId=${postId}`, {
+    const response = await fetch(`${url}/post/savePost?postId=${postId}`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -217,7 +218,7 @@ export async function savePost(postId: number){
 
 export async function unsavePost(postId: number){
     let token = await getToken();
-    const response = await fetch(`https://localhost:5000/post/unsavePost?postId=${postId}`, {
+    const response = await fetch(`${url}/post/unsavePost?postId=${postId}`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -238,7 +239,7 @@ export async function comment(postId: number, text: string, parentCommentId: num
         Text: text,
         ParentCommentId: parentCommentId
     };
-    const response = await fetch(`https://localhost:5000/post/comment`, {
+    const response = await fetch(`${url}/post/comment`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -258,7 +259,7 @@ export async function comment(postId: number, text: string, parentCommentId: num
 
 export async function deleteComment(postId: number){
     let token = await getToken();
-    const response = await fetch(`https://localhost:5000/post/deleteComment?postId=${postId}`, {
+    const response = await fetch(`${url}/post/deleteComment?postId=${postId}`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -274,7 +275,7 @@ export async function deleteComment(postId: number){
 
 export async function checkIfLiked(postId: number){
     let token = await getToken();
-    const response = await fetch(`https://localhost:5000/post/checkIfLiked?postId=${postId}`, {
+    const response = await fetch(`${url}/post/checkIfLiked?postId=${postId}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -295,7 +296,7 @@ export async function checkIfLiked(postId: number){
 
 export async function checkIfSaved(postId: number){
     let token = await getToken();
-    const response = await fetch(`https://localhost:5000/post/checkIfSaved?postId=${postId}`, {
+    const response = await fetch(`${url}/post/checkIfSaved?postId=${postId}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`

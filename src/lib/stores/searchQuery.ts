@@ -1,3 +1,4 @@
+import { url } from "$lib/url";
 import { getToken } from "$lib/handlers/UserHandler";
 import { writable } from "svelte/store";
 
@@ -11,7 +12,7 @@ export async function search() {
     })();
     console.log('searching ' + query);
     let token = await getToken();
-    const response = await fetch(`https://localhost:5000/misc/search?input=${query}`, {
+    const response = await fetch(`${url}/misc/search?input=${query}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`

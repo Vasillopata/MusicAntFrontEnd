@@ -1,9 +1,10 @@
+import { url } from '$lib/url';
 import {getToken} from './UserHandler';
 import type { User } from './UserHandler';
 
 export async function getUserNameById(id: number) {
     let token = await getToken();
-    const response = await fetch(`https://localhost:5000/account/getUserNameById?userId=${id}`, {
+    const response = await fetch(`${url}/account/getUserNameById?userId=${id}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -21,7 +22,7 @@ export async function getUserNameById(id: number) {
     
 export async function getUserName() {
     let token = await getToken();
-    const response = await fetch('https://localhost:5000/account/getUserName', {
+    const response = await fetch(`${url}/account/getUserName`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -39,7 +40,7 @@ export async function getUserName() {
 
 export async function getOwnAccount(){
     let token = await getToken();
-    const response = await fetch('https://localhost:5000/account/getOwnAccount', {
+    const response = await fetch(`${url}/account/getOwnAccount`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`

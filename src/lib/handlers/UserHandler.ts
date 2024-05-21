@@ -1,3 +1,4 @@
+import { url } from "$lib/url";
 import { browser } from "$app/environment";
 import { goto } from "$app/navigation";
 
@@ -54,7 +55,7 @@ export async function login(event: Event,email: string, password: string) {
         Password: password,
     };
     console.log(model);
-    const response = await fetch('https://localhost:5000/auth/login', {
+    const response = await fetch(`${url}/auth/login`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -75,7 +76,7 @@ export async function login(event: Event,email: string, password: string) {
 }
 export async function getUserNameById(userId: number){
     let token = await getToken();
-    const response = await fetch(`https://localhost:5000/account/getUserNameById?userId=${userId}`, {
+    const response = await fetch(`${url}/account/getUserNameById?userId=${userId}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -100,7 +101,7 @@ export async function register(event: Event, email: string,userName: string, pas
         BirthDate: birthDate
     };
     console.log(model);
-    const response = await fetch('https://localhost:5000/auth/register', {
+    const response = await fetch(`${url}/auth/register`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
