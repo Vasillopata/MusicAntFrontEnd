@@ -1,24 +1,26 @@
 <script lang="ts">
-    import { browser } from "$app/environment";
     import LikeButton from "../LikeButton.svelte";
     import SaveButton from "../SaveButton.svelte";
     import {getPostById} from "$lib/handlers/PostHandler";
     import type {Post} from "$lib/handlers/PostHandler";
     import { onMount } from "svelte";
     import {getUserNameById} from "$lib/handlers/UserHandler";
+    import {getCommunityById, type Community} from "$lib/handlers/CommunityHandler";
 
 
-    export let postId: number  
+    export let postId: number;
 
     
-    let post: Post|undefined = undefined
-    let username: string = ""
+    let post: Post|undefined = undefined;
+    let username: string = "";
+    let community: Community = {name: "", description: "", id: 0, type: "", ownerId: 0};
+
     onMount(async ()=>{
         post = await getPostById(postId);
-        if(post.image == null){
-            console.log("no image")
-        }
         username = await getUserNameById(post.userId);
+        if (post.communityId != null){
+            community = await getCommunityById(post.communityId);
+        }
     })
 </script>
 
@@ -29,6 +31,18 @@
             <img src="/images/ale.jpg" alt="">
         </div>
         <p>{username}</p>
+        {#if community.name != ''}
+            <a style="margin-left: auto;" class="community-link" on:click|stopPropagation href="/community/{community.id}">
+                {#if community.type == 'news'}
+                    <i class='bx bxs-news'></i>
+                {:else if community.type == 'fan'}
+                    <i class='bx bx-star'></i>
+                {:else if community.type == 'event'}
+                    <i class='bx bxs-calendar-event' ></i>
+                {/if}
+                {community.name}
+            </a>
+        {/if}
     </div>
     <div class="post-title">
         {post?.title}
@@ -41,7 +55,9 @@
             </div> 
         {/if}
         {#if post?.text}
-            <p>{post?.text}</p>
+            <div class="text-for-post">
+                <p>{post?.text}</p>
+            </div>
         {/if}
     </a>
     <div class="bot-post">
@@ -52,7 +68,30 @@
         </div>
     </div>
 </div>
+
+
 <style>
+    .community-link {
+        color: whitesmoke;
+        text-decoration: none;
+        font-size: 1.2rem;
+        margin-right: 1rem;
+    }
+        .community-link:hover {
+            text-decoration: underline;
+        }
+    .text-for-post{
+        display: flex;
+        flex-direction: row;
+        padding-left: 0.3rem;
+        margin-bottom: 0.5rem;
+        color: whitesmoke;
+        text-decoration: none !important;;
+        border-bottom: none;
+    }
+    .text-for-post>p{
+        text-decoration: none !important;
+    }
     .bx-message-square{
         color: whitesmoke;
         font-size: 2.5rem;
@@ -80,9 +119,14 @@
         width: 50rem;
         padding: 0 1rem;
         transition: background-color 0.15s ease-in-out;
+        text-decoration: none !important;
+    }
+    .post>a{
+        text-decoration: none !important;
     }
         .post:hover{
             background-color: var(--black1-hover);
+            text-decoration: none !important;
         }
     .top-post{
         display: flex;
@@ -100,6 +144,7 @@
         overflow: hidden;
         border-radius: 1rem;
         border: 1px solid var(--black2);
+        text-decoration-color: var(--black1) !important;
     }
         .mid-post>.fg-image{
             border-radius: 1rem;

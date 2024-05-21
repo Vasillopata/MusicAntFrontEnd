@@ -6,19 +6,32 @@
     import { page } from "$app/stores";
     import { onMount } from "svelte";
     import { getUserNameById } from "$lib/handlers/UserHandler";
+    import { followAccount, unfollowAccount, checkIfFollowing } from "$lib/handlers/AccountHandler";
 
-    let bellRing = false 
-    let isFan = false 
-    let posts: number[] = []
-    let userId: number
-    let userName: string
+    let bellRing = false;
+    let isFan = false;
+    let posts: number[] = [];
+    let userId: number;
+    let userName: string;
 
-    let ready = false
+    let ready = false;
+
+    async function handleFollow(){
+        if(isFan){
+            isFan = false;
+            await unfollowAccount(userId);
+        }else{
+            isFan = true;
+            await followAccount(userId);
+        }
+    }
+
     onMount(async()=>{
         ready = false;
         userId = Number($page.params.userid);
         posts = await getPostsByUser(userId, 1, 5);
         userName = await getUserNameById(userId);
+        isFan = await checkIfFollowing(userId);
         ready = true;
     })
 </script>
@@ -38,7 +51,7 @@
                         <i class='{bellRing ? "bx bx-bell" : "bx bx-bell-off" }'></i>
                     </button>
                 {/if}
-                <button style="width:{isFan ? "7.5rem" : "6.5rem"}" class:is-fan={isFan} on:click={()=>{isFan = !isFan}}>
+                <button style="width:{isFan ? "7.5rem" : "6.5rem"}" class:is-fan={isFan} on:click={async()=>{await handleFollow()}}>
                     {isFan ? "Вече си фен" : "Стани фен"}
                 </button>
             </div>

@@ -1,73 +1,178 @@
 <script lang="ts">
     import Post from "../Posts/Post.svelte"
     import Comment from "../Comment.svelte";
-    import { onMount } from "svelte";
+    import { onMount, afterUpdate } from "svelte";
     import { getPostsByUser } from "$lib/handlers/PostHandler";
     import type { User } from "$lib/handlers/UserHandler";
     import { getOwnAccount } from "$lib/handlers/AccountHandler";
     import PostReal from "../Posts/PostReal.svelte";
     import {deletePost} from "$lib/handlers/PostHandler";
+    import Cropper from 'cropperjs';
+    import 'cropperjs/dist/cropper.css';
+    import { goto } from "$app/navigation";
 
-
+    let cropperPfp: any;
+    let cropperBg: any;
+    let imageElementPfp: HTMLImageElement;
+    let imageElementBg: HTMLImageElement;
     let ready = false;
-    let imageUrl = ''
-    let imageUrlBackground = ''
+    let imageUrlPfp = '';
+    let imageUrlBg = '';
     let selectedWindow = 'MyPosts'
     let profile: User = {id: 0, userName: '', email: '', pfp: '', banner: '', createdDate:'', birthDate: ''};
     let posts: number[] = []
+    let showCropperPfp = false;
+    let showCropperBg = false;
 
-    async function handleFileUpload(event: Event, field: string) {
+    async function handleFileUploadPfp(event: Event) {
         const file = (event.target as HTMLInputElement)?.files?.[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                if (field == 'pfp')
-                    imageUrl = reader.result as string;
-                else if (field == 'bg')
-                    imageUrlBackground = reader.result as string;
+                imageUrlPfp = reader.result as string;
+                showCropperPfp = true;
             };
             await reader.readAsDataURL(file);
         }
     }
-    
+
+    async function handleFileUploadBg(event: Event) {
+    const file = (event.target as HTMLInputElement)?.files?.[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            imageUrlBg = reader.result as string;
+            showCropperBg = true;
+            if (cropperBg) {
+                cropperBg.destroy();
+                cropperBg = null;
+            }
+        };
+        await reader.readAsDataURL(file);
+    }
+}
+
+    function applyCropPfp() {
+        if (cropperPfp) {
+            const canvas = cropperPfp.getCroppedCanvas();
+            if (canvas) {
+                imageUrlPfp = canvas.toDataURL();
+                showCropperPfp = false;
+                cropperPfp.destroy();
+                cropperPfp = null;
+            }
+        } else {
+            console.error('Cropper is not initialized');
+        }
+    }
+
+    function applyCropBg() {
+        if (cropperBg) {
+            const canvas = cropperBg.getCroppedCanvas();
+            if (canvas) {
+                imageUrlBg = canvas.toDataURL();
+                showCropperBg = false;
+                cropperBg.destroy();
+            }
+        } else {
+            console.error('Cropper is not initialized');
+        }
+    }
+
     async function handledeletePost(postId: number){
         await deletePost(postId);
         posts = [...posts.filter((id)=> id != postId)];
+        location.reload();
+        goto('/profile/');
     }
-    onMount(async()=>{
+
+    onMount(async () => {
+        if (imageElementPfp) {
+            cropperPfp = new Cropper(imageElementPfp, {
+                aspectRatio: 1,
+                viewMode: 1,
+                dragMode: 'move',
+                autoCropArea: 1,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+            });
+        }
+
+        if (imageElementBg) {
+            cropperBg = new Cropper(imageElementBg, {
+                aspectRatio: 1,
+                viewMode: 1,
+                dragMode: 'move',
+                autoCropArea: 1,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+            });
+        }
         ready = false;
         profile = await getOwnAccount();
         posts = await getPostsByUser(profile.id, 1, 5);
         ready = true;
     })
+
+    afterUpdate(() => {
+        if (showCropperPfp && imageElementPfp && !cropperPfp) {
+            cropperPfp = new Cropper(imageElementPfp, {
+                aspectRatio: 1,
+                viewMode: 1,
+                dragMode: 'move',
+                autoCropArea: 1,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+            });
+        }
+
+        if (showCropperBg && imageElementBg && !cropperBg) {
+            cropperBg = new Cropper(imageElementBg, {
+                aspectRatio: 95 / 12,
+                viewMode: 0,
+                dragMode: 'move',
+                autoCropArea: 1,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+            });
+        }
+    });
 </script>
 
-
 {#if ready}
+{#if showCropperPfp}
+    <div class="modal">
+        <img bind:this={imageElementPfp} src={imageUrlPfp} alt="Image for cropping" />
+        <button on:click={applyCropPfp}>Apply Crop</button>
+    </div>
+{/if}
+{#if showCropperBg}
+    <div class="modal">
+        <img bind:this={imageElementBg} src={imageUrlBg} alt="Image for cropping" />
+        <button on:click={applyCropBg}>Apply Crop</button>
+    </div>
+{/if}
 <div class="main">
-    <label for="imageBg" class="custom-file-input" style="background-image: url({imageUrlBackground!=null ? imageUrlBackground : ""}); ">
-        {#if imageUrlBackground}
-            <i class='bx bx-edit'></i>
+    <label for="fileInputBg">
+        {#if imageUrlBg}
         {:else}
-            <i class='bx bxs-image-add' ></i>
+        {/if}
+        <img id="imageBg" class="custom-file-input" src={imageUrlBg!=null ? imageUrlBg : ""} />
+    </label>
+    <input id="fileInputBg" type="file" name="imageBg" accept="image/*" style="display: none;" on:change={handleFileUploadBg} />
+    
+    <div class="profile-pic-username">
+    <label for="fileInputPfp">
+        <img id="imagePfp" class="custom-file-account-img" src={imageUrlPfp!=null ? imageUrlPfp : ""} />
+        {#if imageUrlPfp}
+        {:else}
         {/if}
     </label>
-    <input bind:value={imageUrlBackground} id="imageBg" type="file" name="imageBg" accept="image/*" style="display: none;" on:change={async(e)=> {handleFileUpload(e,'bg')}} />
-
-    <div class="profile-pic-username">
-        <label for="image" class="custom-file-account-img" style="background-image: url({imageUrl!=null ? imageUrl : ""}); ">
-            {#if imageUrl}
-                <i class='bx bx-edit'></i>
-            {:else}
-                <i class='bx bxs-image-add' ></i>
-            {/if}
-        </label>
-            <input bind:value={imageUrl} id="image" type="file" name="image" accept="image/*" style="display: none;" on:change={async(e)=> {handleFileUpload(e,'pfp')}} />
-        <div class="username-p">
-            <p>{profile.userName}</p>
-            <i class='bx bx-edit'></i>
-        </div>
+    <input id="fileInputPfp" type="file" name="imagePfp" accept="image/*" style="display: none;" on:change={handleFileUploadPfp} />
+    <div class="username-p">
+        <p>{profile.userName}</p>
     </div>
+</div>
 
     <div class="profile-buttons">
         <button on:click={async()=>{selectedWindow = 'MyPosts'; posts = await getPostsByUser(profile.id, 1, 5)}}>
@@ -110,13 +215,30 @@
             
         </div>
     {/if}
-    
+
 </div>
 {/if}
 
 
 
 <style>
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .modal img {
+        max-width: 80%;
+        max-height: 80%;
+    }
     .delete-button{
         position: absolute;
         top: 1rem;
@@ -231,6 +353,7 @@
         background-size: cover; 
         background-position:center;
         z-index: 1;
+        object-fit: cover;
     }
     .custom-file-input:hover{
         cursor: pointer;

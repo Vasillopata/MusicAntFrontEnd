@@ -1,9 +1,16 @@
 <script lang="ts">
     import { slide } from "svelte/transition";
+    import { createCommunity, type Community } from "$lib/handlers/CommunityHandler";
+    import { goto } from "$app/navigation";
 
 
-    let addcommunity = false
+    let addcommunity = false;
 
+    let nameInput = '';
+    let typeInput = 'news';
+    let descriptionInput:string|null = null;
+
+    async function handleCreate() { const newCommunity:Community = await createCommunity(nameInput, typeInput, descriptionInput); goto(`/community/${newCommunity.id}`); addcommunity = false;}
 </script>
 
 <button class="add-community" on:click={()=>{addcommunity = !addcommunity}}>
@@ -14,35 +21,36 @@
 {#if addcommunity == true}
     <div class="pop-up-bg">
         <div class="pop-up" transition:slide={{duration:200}}>
+            <h1>aaa {typeInput}</h1>
             <h2>Създай общност</h2>
             <button class="exit-button" on:click={()=>{addcommunity = false}}><i class='bx bx-x'></i></button>
             <h6>Създайте и развийте общност отностно нещо ,което ви интересува</h6>    
             <div class="input-comunity-name-wraper">
-                <input class="input-comunity-name" type="text" placeholder="Име на групата">
+                <input class="input-comunity-name" type="text" placeholder="Име на групата" bind:value={nameInput}>
                 <span>Веднъж създадено името на общността не може да бъде сменено</span>
             </div>
             <h6>Тип на общността </h6> 
             <div class="chose-type">
                 <div class="radio-type">
-                    <input class="radio" type="radio" id="preference1" name="preference" value="Preference 1">
+                    <input class="radio" type="radio" id="news" name="preference" value="news" bind:group={typeInput}>
                     Общност за новини
                 </div>
                 <div class="radio-type">
-                    <input class="radio" type="radio" id="preference1" name="preference" value="Preference 1">
-                    Общност за новини
+                    <input class="radio" type="radio" id="preference1" name="preference" value="fan" bind:group={typeInput}>
+                    Фен страница
                 </div>
                 <div class="radio-type">
-                    <input class="radio" type="radio" id="preference1" name="preference" value="Preference 1">
-                    Общност за новини
+                    <input class="radio" type="radio" id="preference1" name="preference" value="event" bind:group={typeInput}>
+                    Общност за събития
                 </div>
             </div>
             <h6>Кратко описание на общността</h6>
             <div class="text-area">
-                <textarea class="textarea" name="textarea" placeholder="Описание" ></textarea>
+                <textarea class="textarea" name="textarea" placeholder="Описание" bind:value={descriptionInput}></textarea>
             </div>
             <div class="botom-buttons">
                 <button class="cancel-button" on:click={()=>{addcommunity = false}}>Откажи</button>
-                <button class="submit-button">
+                <button class="submit-button" class:disabled={nameInput=='' || typeInput==''} on:click={async()=>{await handleCreate()}}>
                     Създай
                 </button>
             </div>
@@ -52,6 +60,10 @@
 
 
 <style>
+    .disabled {
+        pointer-events: none;
+        opacity: 0.5;
+    }
     .cancel-button{
         background-color: transparent;
         height: 2.8rem;

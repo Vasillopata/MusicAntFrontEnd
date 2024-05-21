@@ -7,6 +7,7 @@
     import type { Community } from '$lib/handlers/CommunityHandler';
     import AccountLink from "../AccountLink.svelte";
     import PostLink from "../PostLink.svelte";
+    import CommunityLink from '../CommunityLink.svelte';
 
     let ready = false
 
@@ -48,7 +49,9 @@
         <button on:click={()=>{friendsOpened = !friendsOpened}}>Приятели</button>
         {#if friendsOpened}
             <div class="dropdown-body"transition:slide>
-                a
+                {#each friends as friend}
+                    <AccountLink username="{friend.userName}" id={friend.id} image={friend.pfp}/>           
+                {/each}
             </div>
         {/if}
     </div>
@@ -57,7 +60,7 @@
         {#if profilesOpened}
             <div class="dropdown-body"transition:slide>
                 {#each profiles as profile}
-                    <AccountLink username="{profile.userName}" id={profile.id} image="a"/>           
+                    <AccountLink username="{profile.userName}" id={profile.id} image={profile.pfp}/>           
                 {/each}
             </div>
         {/if}
@@ -76,7 +79,9 @@
         <button on:click={()=>{communitiesOpened = !communitiesOpened}}>Общности</button>
         {#if communitiesOpened}
             <div class="dropdown-body" transition:slide>
-                a
+                {#each communities as community}
+                    <CommunityLink {community}/> 
+                {/each}
             </div>
         {/if}
     </div>

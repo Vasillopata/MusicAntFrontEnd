@@ -65,3 +65,79 @@ export async function getOwnAccount(){
     
     return user;
 }
+
+export async function followAccount(accountId: number) {
+    let token = await getToken();
+    const response = await fetch(`${url}/account/followAccount?accountId=${accountId}`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        console.log(response);
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return;
+}
+
+export async function unfollowAccount(accountId: number) {
+    let token = await getToken();
+    const response = await fetch(`${url}/account/unfollowAccount?accountId=${accountId}`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        console.log(response);
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return;
+}
+
+export async function checkIfFollowing(accountId:number) {
+    let token = await getToken();
+    const response = await fetch(`${url}/account/checkIfFollowing?accountId=${accountId}`, {
+        method: 'GET',
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        console.log(response);
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.text();
+    if (data == "true") {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+export async function getRecentFans() {
+    let token = await getToken();
+    const response = await fetch(`${url}/account/getRecentFans`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (!response.ok) {
+        console.log(response);
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const recentFans: User[] = data.recentFans;
+    return recentFans;
+}
