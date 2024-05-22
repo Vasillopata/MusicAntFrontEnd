@@ -376,4 +376,45 @@ export async function getCommentById(commentId: number){
     return {comment, repliesCount};
 }
 
+export async function getLikedPosts() {
+    let token = await getToken();
+    const response = await fetch(`${url}/post/getLikedPosts`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        console.log(response);
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log(data);
+    const ids: number[] = data.likes;
+    return ids;
+
+}
+
+export async function getSavedPosts() {
+    let token = await getToken();
+    const response = await fetch(`${url}/post/getSavedPosts`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        console.log(response);
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    let ids: number[] = []
+    ids = data.saves;
+    return ids;
+}
+
 

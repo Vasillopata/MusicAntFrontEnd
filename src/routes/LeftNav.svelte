@@ -56,7 +56,7 @@
   
   
 <div class="side-nav">
-    <a href="/" on:click={async(e)=>{await fetchRecentFans(); toggleCategory(e,'fans')}} class="side-button" class:side-button-opened={fansOpened}>
+    <a href="/" on:click={async(e)=>{e.preventDefault();await fetchRecentFans(); toggleCategory(e,'fans')}} class="side-button" class:side-button-opened={fansOpened}>
         <span>Скорошни Фенове</span>
         <i class='bx bx-chevron-down'></i>
     </a>
@@ -67,7 +67,7 @@
             {/each}        
         </div>
     {/if}
-    <a href="/" on:click={async(e)=>{await fetchCommunities();toggleCategory(e,'genre')}} class="side-button" class:side-button-opened={genreOpened}>
+    <a href="/" on:click={async(e)=>{e.preventDefault();await fetchCommunities();toggleCategory(e,'genre')}} class="side-button" class:side-button-opened={genreOpened}>
         <span>Твоите общности</span>
         <i class='bx bx-chevron-down'></i>
     </a>
@@ -79,7 +79,7 @@
             {/each}
         </div>
     {/if}
-    <a href="/" on:click={(e)=>{toggleCategory(e,'resources')}} class="side-button" class:side-button-opened={resourcesOpened}>
+    <a href="/" on:click={(e)=>{e.preventDefault();toggleCategory(e,'resources')}} class="side-button" class:side-button-opened={resourcesOpened}>
         <span>Ресурси</span>
         <i class='bx bx-chevron-down'></i>
     </a>

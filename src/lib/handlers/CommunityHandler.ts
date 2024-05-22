@@ -131,3 +131,20 @@ export async function checkIfMember(communityId:number) {
         return false;
     }
 }
+
+export async function deleteCommunity(communityId:number) {
+    let token = await getToken();
+    const response = await fetch(`${url}/community/deleteCommunity?communityId=${communityId}`, {
+        method: 'POST',
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        console.log(response);
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return;
+}

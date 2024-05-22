@@ -1,0 +1,1 @@
+export const defaultPfp = '/images/ant.svg';

@@ -6,21 +6,27 @@
     import { onMount } from "svelte";
     import {getUserNameById} from "$lib/handlers/UserHandler";
     import {getCommunityById, type Community} from "$lib/handlers/CommunityHandler";
+    import {getPfpById} from "$lib/handlers/AccountHandler";
+    import { defaultPfp } from "$lib/defaultPfp";
 
 
     export let postId: number;
 
-    
+    let ready = false;
     let post: Post|undefined = undefined;
     let username: string = "";
+    let pfp: string = "";
     let community: Community = {name: "", description: "", id: 0, type: "", ownerId: 0};
 
     onMount(async ()=>{
+        ready = false;
         post = await getPostById(postId);
         username = await getUserNameById(post.userId);
         if (post.communityId != null){
             community = await getCommunityById(post.communityId);
         }
+        pfp = await getPfpById(post.userId);
+        ready = true;
     })
 </script>
 
@@ -28,7 +34,7 @@
 <div class="post">
     <div class="top-post">
         <div class="top-profile">
-            <img src="/images/ale.jpg" alt="">
+            <img src="{pfp !== "" ? pfp : defaultPfp}" alt="">
         </div>
         <p>{username}</p>
         {#if community.name != ''}
@@ -48,7 +54,7 @@
         {post?.title}
     </div>
     <a href="/post/{postId}">
-        {#if post?.image}
+        {#if post?.image != '' && post?.image != null}
             <div class="mid-post">
                 <img class="fg-image" src={post?.image} alt="">
                 <img class="bg-image" src={post?.image} alt="">

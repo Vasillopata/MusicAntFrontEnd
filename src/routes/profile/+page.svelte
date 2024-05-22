@@ -1,6 +1,4 @@
 <script lang="ts">
-    import Post from "../Posts/Post.svelte"
-    import Comment from "../Comment.svelte";
     import { onMount, afterUpdate } from "svelte";
     import { getPostsByUser } from "$lib/handlers/PostHandler";
     import type { User } from "$lib/handlers/UserHandler";
@@ -10,6 +8,9 @@
     import Cropper from 'cropperjs';
     import 'cropperjs/dist/cropper.css';
     import { goto } from "$app/navigation";
+    import {setPfp, setBanner} from "$lib/handlers/AccountHandler";
+    import {getLikedPosts, getSavedPosts} from "$lib/handlers/PostHandler";
+    import Loading from '../Loading.svelte'
 
     let cropperPfp: any;
     let cropperBg: any;
@@ -19,10 +20,11 @@
     let imageUrlPfp = '';
     let imageUrlBg = '';
     let selectedWindow = 'MyPosts'
-    let profile: User = {id: 0, userName: '', email: '', pfp: '', banner: '', createdDate:'', birthDate: ''};
-    let posts: number[] = []
+    let profile: User = {id: 0, userName: '', email: '', pfp: '', banner: '', createdDate:'', birthDate: '', isLocked:false};
+    let posts: number[] = [];
     let showCropperPfp = false;
     let showCropperBg = false;
+    let loadingPosts = false;
 
     async function handleFileUploadPfp(event: Event) {
         const file = (event.target as HTMLInputElement)?.files?.[0];
@@ -37,26 +39,28 @@
     }
 
     async function handleFileUploadBg(event: Event) {
-    const file = (event.target as HTMLInputElement)?.files?.[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            imageUrlBg = reader.result as string;
-            showCropperBg = true;
-            if (cropperBg) {
-                cropperBg.destroy();
-                cropperBg = null;
-            }
-        };
-        await reader.readAsDataURL(file);
+        const file = (event.target as HTMLInputElement)?.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                imageUrlBg = reader.result as string;
+                showCropperBg = true;
+                if (cropperBg) {
+                    cropperBg.destroy();
+                    cropperBg = null;
+                }
+            };
+            await reader.readAsDataURL(file);
+        }
     }
-}
 
-    function applyCropPfp() {
+    async function applyCropPfp() {
         if (cropperPfp) {
             const canvas = cropperPfp.getCroppedCanvas();
             if (canvas) {
                 imageUrlPfp = canvas.toDataURL();
+                const tempImg = await fetch(imageUrlPfp).then(res => res.blob());
+                imageUrlPfp = await setPfp(tempImg);
                 showCropperPfp = false;
                 cropperPfp.destroy();
                 cropperPfp = null;
@@ -66,13 +70,16 @@
         }
     }
 
-    function applyCropBg() {
+    async function applyCropBg() {
         if (cropperBg) {
             const canvas = cropperBg.getCroppedCanvas();
             if (canvas) {
                 imageUrlBg = canvas.toDataURL();
+                const tempImg = await fetch(imageUrlBg).then(res => res.blob());
+                imageUrlBg = await setBanner(tempImg);
                 showCropperBg = false;
                 cropperBg.destroy();
+                cropperBg = null;
             }
         } else {
             console.error('Cropper is not initialized');
@@ -86,7 +93,31 @@
         goto('/profile/');
     }
 
-    onMount(async () => {
+    async function fetchUserPosts(){
+        selectedWindow = 'MyPosts'; 
+        loadingPosts=true; 
+        posts = [...await getPostsByUser(profile.id, 1, 5)]; 
+        loadingPosts=false;
+    }
+    async function fetchLikedPosts() {
+        selectedWindow = 'LikedPosts'; 
+        loadingPosts=true; 
+        let newPosts: number[] = [];
+        newPosts = await getLikedPosts();
+        posts = [...newPosts]; 
+        loadingPosts=false;
+    }
+    async function fetchSavedPosts() {
+        selectedWindow = 'SavedPosts'; 
+        loadingPosts=true;
+        let newPosts: number[] = [];
+        newPosts = await getSavedPosts();
+        posts = [...newPosts];
+        loadingPosts=false;
+    }
+
+    onMount(async () => {        
+        ready = false;
         if (imageElementPfp) {
             cropperPfp = new Cropper(imageElementPfp, {
                 aspectRatio: 1,
@@ -108,8 +139,14 @@
                 cropBoxResizable: true,
             });
         }
-        ready = false;
+
         profile = await getOwnAccount();
+        if (profile.pfp) {
+            imageUrlPfp = profile.pfp;
+        }
+        if (profile.banner) {
+            imageUrlBg = profile.banner;
+        }
         posts = await getPostsByUser(profile.id, 1, 5);
         ready = true;
     })
@@ -154,68 +191,45 @@
 {/if}
 <div class="main">
     <label for="fileInputBg">
-        {#if imageUrlBg}
-        {:else}
-        {/if}
-        <img id="imageBg" class="custom-file-input" src={imageUrlBg!=null ? imageUrlBg : ""} />
+        <img id="imageBg" alt="" class="custom-file-input" src={imageUrlBg!=null ? imageUrlBg : ""} />
     </label>
     <input id="fileInputBg" type="file" name="imageBg" accept="image/*" style="display: none;" on:change={handleFileUploadBg} />
     
     <div class="profile-pic-username">
     <label for="fileInputPfp">
-        <img id="imagePfp" class="custom-file-account-img" src={imageUrlPfp!=null ? imageUrlPfp : ""} />
-        {#if imageUrlPfp}
-        {:else}
-        {/if}
+        <img id="imagePfp" alt="" class="custom-file-account-img" src={imageUrlPfp!=null ? imageUrlPfp : ""} />
     </label>
     <input id="fileInputPfp" type="file" name="imagePfp" accept="image/*" style="display: none;" on:change={handleFileUploadPfp} />
     <div class="username-p">
         <p>{profile.userName}</p>
     </div>
 </div>
-
     <div class="profile-buttons">
-        <button on:click={async()=>{selectedWindow = 'MyPosts'; posts = await getPostsByUser(profile.id, 1, 5)}}>
+        <button on:click={async()=>{await fetchUserPosts()}}>
             Мои постове
         </button>
-        <button on:click={()=>{selectedWindow = 'MyComments'; posts = []}}>
-            Мои коментари
-        </button>
-        <button on:click={()=>{selectedWindow = 'SavedPosts'; posts = []}}>
+        <button on:click={async()=>{await fetchSavedPosts()}}>
             Запазени
         </button>
-        <button on:click={()=>{selectedWindow = 'LikedPosts'; posts = []}}>
+        <button on:click={async()=>{await fetchLikedPosts()}}>
             Харесани
         </button>
     </div>
     <div class="separator"></div>
-
-    {#if selectedWindow == 'MyPosts'}
-        <div class="post-wraper">
-            {#each posts as postId} 
+    <div class="post-wraper">
+        {#if loadingPosts}
+            <p>Зареждане...</p>
+            <Loading/>
+        {/if}
+        {#if !loadingPosts}
+            {#each posts as postId (postId)} 
                 <div style="position: relative">
                     <button class="delete-button" on:click={async()=>{await handledeletePost(postId)}}><i class='bx bxs-trash' ></i></button>
                     <PostReal {postId} />
                 </div>
             {/each}
-        </div>
-    {/if}
-    {#if selectedWindow == 'MyComments'}
-        <div class="post-wraper">
-            
-        </div>
-    {/if}
-    {#if selectedWindow == 'SavedPosts'}
-        <div class="post-wraper">
-            
-        </div>
-    {/if}
-    {#if selectedWindow == 'LikedPosts'}
-        <div class="post-wraper">
-            
-        </div>
-    {/if}
-
+        {/if}
+    </div>
 </div>
 {/if}
 

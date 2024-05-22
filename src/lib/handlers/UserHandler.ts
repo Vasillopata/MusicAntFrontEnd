@@ -6,10 +6,11 @@ export interface User{
     id: number;
     userName: string;
     email: string;
-    pfp: string;
-    banner: string;
+    pfp: string|null;
+    banner: string|null;
     createdDate: string;
     birthDate: string;
+    isLocked: boolean;
 }
 
 
@@ -63,15 +64,14 @@ export async function login(event: Event,email: string, password: string) {
         body: JSON.stringify(model),
     });
 
-    const data = await response.json();
-
     if (response.ok) {
-        console.log("Login successful!");
+        const data = await response.json();
         document.cookie = `token=${data.token};path=/;Secure;SameSite=Strict;`;
         await goto('/');
         location.reload();
     } else {
-        console.error("Login failed: ", data.message);
+        const data = await response.text();
+        return data;
     }
 }
 
@@ -101,7 +101,6 @@ export async function register(event: Event, email: string,userName: string, pas
         Password: password,
         BirthDate: birthDate
     };
-    console.log(model);
     const response = await fetch(`${url}/auth/register`, {
         method: 'POST',
         headers: {
@@ -110,14 +109,14 @@ export async function register(event: Event, email: string,userName: string, pas
         body: JSON.stringify(model),
     });
 
-    const data = await response.json();
-
     if (response.ok) {
+        const data = await response.json();
         console.log("Registration successful!");
         document.cookie = `token=${data.token};path=/;Secure;SameSite=Strict;`;
         await goto('/');
         location.reload();
     } else {
-        console.error("Registration failed: ", data.message);
+        const data = await response.text();
+        return data;
     }
 }

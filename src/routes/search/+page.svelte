@@ -31,6 +31,20 @@
         posts = data.posts;
         postImgs = data.postImgs;
         communities = data.communities;
+
+        profiles.forEach(user => {
+            if (user.pfp) {
+                const blob = new Blob([user.pfp]);
+                user.pfp = URL.createObjectURL(blob);
+            }
+        });
+        friends.forEach(user => {
+            if (user.pfp) {
+                const blob = new Blob([user.pfp]);
+                user.pfp = URL.createObjectURL(blob);
+            }
+        });
+        
         ready = true;
     }
     $:{

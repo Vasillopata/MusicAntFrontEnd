@@ -1,14 +1,22 @@
 <script lang="ts">
+    import { defaultPfp } from "$lib/defaultPfp";
+    import { onMount } from "svelte";
+    import {getPfpById} from "$lib/handlers/AccountHandler";
+
     export let username: string; 
-    export let image: string|undefined=undefined;
+    export let image: string|null;
     export let id: number;
 
+    let pfp = '';
 
+    onMount(async ()=>{
+        pfp = await getPfpById(id);
+    })
 </script>
 
 <div class="Box">
     <a href="/account/{id}">
-        <div class="top-profile"><img src="{image!=undefined ? image : "/images/ale.jpg"}" alt=""></div>
+        <div class="top-profile"><img src="{pfp != '' ? pfp : defaultPfp}" alt=""></div>
         <span>{username}</span>
     </a>  
 </div>

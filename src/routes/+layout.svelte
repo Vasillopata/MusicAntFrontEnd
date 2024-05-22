@@ -3,13 +3,12 @@
     import LeftNav from './LeftNav.svelte';
     import "./style.css";
     import {slide} from 'svelte/transition';
-    import { writable } from 'svelte/store';
     import {isLoggedIn, logout} from '$lib/handlers/UserHandler'
     import {currentSearchQuery} from '$lib/stores/searchQuery'
     import Loading from './Loading.svelte'
     import { goto } from '$app/navigation';
     import { scrollY } from '$lib/store';
-    import { browser } from '$app/environment';
+    import {getOwnPfp} from '$lib/handlers/AccountHandler'
 
     let searchBarInput = '';
     let searchBarElement: HTMLInputElement|undefined = undefined;
@@ -17,6 +16,7 @@
 
     let website: HTMLDivElement;
     let loggedIn: boolean;
+    let ownPfp: string;
     
     
     onMount(async() => {
@@ -24,6 +24,7 @@
         if(!loggedIn){
             goto('/login')
         }
+        ownPfp = await getOwnPfp();
         await website.addEventListener('scroll', () => {
             scrollY.set(website.scrollTop);
         });
@@ -60,7 +61,7 @@
         {#if loggedIn}
         <a href="/profile">
             <div class="account-img">
-                <img src="/images/ale.jpg" alt="">
+                <img src="{ownPfp}" alt="">
                 <div class="dropdown">
                     <a href="/profile">Профил</a>
                     <button on:click={logout}>Изход</button>

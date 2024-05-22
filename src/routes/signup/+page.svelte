@@ -1,11 +1,13 @@
 <script lang="ts">
     import {register} from '$lib/handlers/UserHandler'   
+    import { slide } from 'svelte/transition';
 
     let email = ''
     let username = ''
     let password = ''
     let birthdate: Date = new Date()
     
+    let error: string|undefined = undefined;
 </script>
 
 <div class="wrap">
@@ -24,7 +26,10 @@
             <label for="password">Парола</label>
         </div>
         <input class="birthday-input" type="date" bind:value={birthdate}>
-        <button on:click={async(e)=>{await register(e, email, username, password, birthdate)}} class="sign-in-button">Рeгистрация</button>
+        <button on:click={async(e)=>{error = await register(e, email, username, password, birthdate)}} class="sign-in-button">Рeгистрация</button>
+        {#if error != undefined}
+            <p style="color: red; width: 100%; padding: 0 3rem; margin-top:2rem;" transition:slide>{error}</p>
+        {/if}
     </div>
 </div>
 

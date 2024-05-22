@@ -1,18 +1,22 @@
 <script lang="ts">
-    import { quintOut } from "svelte/easing";
-    import { fade, slide } from "svelte/transition";
     import PostReal from "../../Posts/PostReal.svelte";
-    import {getPostsByUser} from "$lib/handlers/PostHandler";
+    import {deletePost, getPostsByUser} from "$lib/handlers/PostHandler";
     import { page } from "$app/stores";
     import { onMount } from "svelte";
-    import { getUserNameById } from "$lib/handlers/UserHandler";
+    import { getUserNameById, type User } from "$lib/handlers/UserHandler";
     import { followAccount, unfollowAccount, checkIfFollowing } from "$lib/handlers/AccountHandler";
+    import {getAccount} from "$lib/handlers/AccountHandler";
+    import {defaultPfp} from '$lib/defaultPfp';
+    import { checkIfAdmin, lockAccount, unlockAccount } from "$lib/handlers/AccountHandler";
+    import { goto } from "$app/navigation";
 
-    let bellRing = false;
     let isFan = false;
     let posts: number[] = [];
     let userId: number;
     let userName: string;
+    let user: User = {id: 0, userName: "", email: "", pfp: null, banner: null, createdDate: '', birthDate: '', isLocked: false};
+    let accountLocked = false;
+    let canEdit = false;
 
     let ready = false;
 
@@ -26,12 +30,28 @@
         }
     }
 
+    async function handleLock() {
+        if(accountLocked){
+            await unlockAccount(userId);
+            accountLocked = false;
+        }else{
+            await lockAccount(userId);
+            accountLocked = true;
+        }
+        location.reload();
+        goto(`/account/${userId}`);
+    }
+
     onMount(async()=>{
         ready = false;
         userId = Number($page.params.userid);
+        user = await getAccount(userId);
         posts = await getPostsByUser(userId, 1, 5);
         userName = await getUserNameById(userId);
         isFan = await checkIfFollowing(userId);
+        if (await checkIfAdmin()){
+            canEdit = true;
+        }
         ready = true;
     })
 </script>
@@ -40,16 +60,19 @@
 {#if ready}
     <div class="account-page">
         <div class="account-background">
-            <img src="https://thumbs.dreamstime.com/b/panoramic-autumn-landscape-wooden-path-fall-nature-backgro-sunset-background-97979511.jpg" alt="">    
+            <img src="{user.banner}" alt="">    
         </div>
         <div class="account-img">
-                <img src="/images/ale.jpg" alt="">
-                <p>{userName}</p>
+                <img src="{user.pfp != null ? user.pfp : defaultPfp}" alt="">
+                <p>{user.userName}</p>
+                {#if user.isLocked}
+                    <p style="color:red;">Профилът е заключен.</p>
+                {/if}
             <div class="account-buttons">
-                {#if isFan}
-                    <button on:click={()=>{bellRing = !bellRing}} transition:slide={{duration:300, axis:"x", easing: quintOut}} class="bell">
-                        <i class='{bellRing ? "bx bx-bell" : "bx bx-bell-off" }'></i>
-                    </button>
+                {#if canEdit}
+                <button on:click={async()=>{await handleLock()}}>
+                    {accountLocked ? "Отключи" : "Заключи"} профил
+                </button>
                 {/if}
                 <button style="width:{isFan ? "7.5rem" : "6.5rem"}" class:is-fan={isFan} on:click={async()=>{await handleFollow()}}>
                     {isFan ? "Вече си фен" : "Стани фен"}
@@ -59,7 +82,13 @@
         <div style="display: flex; flex-direction:row; justify-content:space-between">
             <div class="post-list">
                 {#each posts as id}
-                    <PostReal postId={id}/> 
+                    <div style="position: relative;">
+                        <button class="delete-button" on:click={
+                        async()=>{await deletePost(id); location.reload(); goto(`/account/${id}`)}}>
+                            <i class='bx bxs-trash' ></i>
+                        </button>
+                        <PostReal postId={id}/> 
+                    </div>
                 {/each}
             </div>
         </div>
@@ -68,6 +97,19 @@
 
 
 <style>
+    .delete-button{
+        position: absolute;
+        top: 1rem;
+        right: -4rem;   
+        background-color: var(--darkest);
+        font-size: 1.3rem;
+        outline: none;
+        border: none;
+        height: 4rem;
+        border-radius: 1.5rem;
+        color: whitesmoke;
+        width: 4rem;
+    }
     .post-list{
         margin-left: 17rem;
     }

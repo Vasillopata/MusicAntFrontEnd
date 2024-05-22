@@ -1,8 +1,11 @@
 <script lang="ts">
     import {login} from '$lib/handlers/UserHandler'
+    import { slide } from 'svelte/transition';
 
     let email: string = ''
     let password: string = ''
+
+    let error: string|undefined = undefined;
 </script>
 
 <div class="wrap">
@@ -16,8 +19,11 @@
         <input type="password" id="password" placeholder=" "  bind:value={password}>
         <label for="password">Парола</label>
     </div>
-    <button class="sign-in-button" on:click={async(e)=>{await login(e,email,password)}}>Вписване</button>
+    <button class="sign-in-button" on:click={async(e)=>{error = await login(e,email,password)}}>Вписване</button>
     <p>Нямаш акаунт? <a style="text-decoration: none;" href="/signup">Регистрирай се!</a></p>
+    {#if error != undefined}
+        <p style="color: red;" transition:slide>{error}</p>
+    {/if}
 </div>
 </div>
 
